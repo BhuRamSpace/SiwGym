@@ -22,7 +22,7 @@ public class Credentials {
     @NotBlank
     private String password;
 
-    @NotBlank
+    //@NotBlank
     private String role;
 
     @OneToOne(fetch = FetchType.EAGER)

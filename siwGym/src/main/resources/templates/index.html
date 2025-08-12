@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SiwGym - La tua palestra</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>SiwGym</h1>
+        </div>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/about">Chi siamo</a>
+            <a href="/services">Servizi</a>
+            <a href="/contacts">Contatti</a>
+        </nav>
+        <div class="auth-buttons">
+            <div sec:authorize="!isAuthenticated()">
+                <a href="/login" class="btn">Login</a>
+                <a href="/register" class="btn btn-primary">Registrati</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <a href="/logout" class="btn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2>Benvenuto in SiwGym</h2>
+                <p>La tua destinazione per il benessere e il fitness.</p>
+                <div sec:authorize="!isAuthenticated()">
+                    <a href="/register" class="btn btn-primary btn-large">Inizia ora</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <p>Bentornato, <span sec:authentication="name"></span>!</p>
+                    <a href="/success" class="btn btn-primary btn-large">Vai alla tua area personale</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="features-section">
+            <div class="feature-card">
+                <h3>🏋️‍♀️ Attrezzature all'avanguardia</h3>
+                <p>Le migliori macchine per ogni tipo di allenamento.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📅 Corsi per tutti</h3>
+                <p>Dal body-building allo yoga, trova il tuo corso ideale.</p>
+            </div>
+            <div class="feature-card">
+                <h3>💪 Trainer professionisti</h3>
+                <p>Fatti seguire da esperti certificati per raggiungere i tuoi obiettivi.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 SiwGym. Tutti i diritti riservati.</p>
+    </footer>
+
+    <style>
+        /* CSS di base per la pagina */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo h1 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .navbar a {
+            margin: 0 1rem;
+            text-decoration: none;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 2rem 0;
+        }
+
+        .hero-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://picsum.photos/1200/400');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .hero-section h2 {
+            font-size: 2.5rem;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+        }
+
+        .features-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            flex: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #333;
+            color: white;
+            margin-top: 2rem;
+        }
+    </style>
+</body>
+</html>

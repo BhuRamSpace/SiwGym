@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestione Corsi - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="container">
+        <h2>Gestione Corsi</h2>
+        
+        <a href="/admin/addCourse" class="btn btn-primary" style="margin-bottom: 1.5rem;">Crea Nuovo Corso</a>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome Corso</th>
+                    <th>Trainer</th>
+                    <th>Orario</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="course : ${courses}">
+                    <td th:text="${course.name}"></td>
+                    <td th:text="${course.trainer.name} + ' ' + ${course.trainer.surname}"></td>
+                    <td th:text="${course.schedule}"></td>
+                    <td class="action-buttons">
+                        <a th:href="@{'/admin/viewCourse/' + ${course.id}}" class="btn">Visualizza</a>
+                        <a th:href="@{'/admin/editCourse/' + ${course.id}}" class="btn">Modifica</a>
+                        <a th:href="@{'/admin/deleteCourse/' + ${course.id}}" class="btn btn-danger">Elimina</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="/admin/dashboard" class="btn" style="margin-top: 1.5rem;">Torna alla Dashboard</a>
+    </main>
+</body>
+</html>

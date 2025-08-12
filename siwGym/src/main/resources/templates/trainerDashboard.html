@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Dashboard Trainer - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>SiwGym</h1>
+        <a href="/logout">Logout</a>
+    </header>
+
+    <main class="container">
+        <h2 style="margin-bottom: 2rem;">Pannello di controllo Trainer</h2>
+        
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <h3>Navigazione</h3>
+                <nav class="sidebar-menu">
+                    <a href="/trainer/dashboard">Dashboard</a>
+                    <a href="/trainer/myCourses">I miei Corsi</a>
+                    <a href="/trainer/manageWorkoutPlans">Gestione Schede</a>
+                </nav>
+            </div>
+            
+            <div class="main-content">
+                <h2>Bentornato, Trainer <span sec:authentication="name"></span>!</h2>
+                <p>Riepilogo delle tue responsabilità e attività.</p>
+                
+                <div class="info-card">
+                    <h3>Corsi che tieni</h3>
+                    <p>Hai <strong><span th:text="${courseCount}"></span></strong> corsi attivi questa settimana.</p>
+                    <a href="/trainer/myCourses" class="btn">Vai ai corsi</a>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Utenti da seguire</h3>
+                    <p>Hai <strong><span th:text="${clientCount}"></span></strong> utenti che segui attualmente.</p>
+                    <a href="/trainer/manageWorkoutPlans" class="btn">Gestisci le schede</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 SiwGym. Tutti i diritti riservati.</p>
+    </footer>
+</body>
+</html>

@@ -20,7 +20,6 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class AuthConfiguration {
 
-    // Ruoli definiti nel nostro sistema
     public static final String DEFAULT_ROLE = "DEFAULT";
     public static final String TRAINER_ROLE = "TRAINER";
     public static final String ADMIN_ROLE = "ADMIN";
@@ -32,10 +31,11 @@ public class AuthConfiguration {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
             .dataSource(dataSource)
-            .authoritiesByUsernameQuery("SELECT username, role from credentials WHERE username=?")
-            .usersByUsernameQuery("SELECT username, password, 1 as enabled FROM credentials WHERE username=?");
+            .authoritiesByUsernameQuery("SELECT username, role FROM credentials WHERE username=?")
+            .usersByUsernameQuery("SELECT username, password, 1 as enabled FROM credentials WHERE username=?")
+            .rolePrefix(""); // ✅ Disabilita il prefisso "ROLE_"
     }
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -49,19 +49,19 @@ public class AuthConfiguration {
     @Bean
     protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf().and().cors().disable()
+                .csrf().disable() // ✅ Disabilitato per semplicità in fase di test
+                .cors().disable()
                 .authorizeHttpRequests()
-                    // Chiunque può accedere a queste pagine
-                    .requestMatchers(HttpMethod.GET, "/", "/index", "/register", "/css/**", "/images/**", "favicon.ico").permitAll()
-                    // Chiunque può inviare richieste POST a questi endpoint
+                    // ✅ Accesso libero alle pagine pubbliche
+                    .requestMatchers(HttpMethod.GET, "/", "/index", "/register", "/login", "/css/**", "/images/**", "/favicon.ico").permitAll()
                     .requestMatchers(HttpMethod.POST, "/register", "/login").permitAll()
-                    // Solo gli ADMIN possono accedere alle pagine /admin/**
+                    // Solo ADMIN
                     .requestMatchers(HttpMethod.GET, "/admin/**").hasAnyAuthority(ADMIN_ROLE)
                     .requestMatchers(HttpMethod.POST, "/admin/**").hasAnyAuthority(ADMIN_ROLE)
-                    // Solo gli ADMIN e i TRAINER possono accedere alle pagine /staff/**
+                    // Solo ADMIN e TRAINER
                     .requestMatchers(HttpMethod.GET, "/staff/**").hasAnyAuthority(ADMIN_ROLE, TRAINER_ROLE)
                     .requestMatchers(HttpMethod.POST, "/staff/**").hasAnyAuthority(ADMIN_ROLE, TRAINER_ROLE)
-                    // Tutti gli utenti autenticati possono accedere alle pagine rimanenti
+                    // Tutti gli altri endpoint richiedono autenticazione
                     .anyRequest().authenticated()
                 .and().formLogin()
                     .loginPage("/login")

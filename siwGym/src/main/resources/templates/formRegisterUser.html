@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registrazione - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Stili per la pagina di registrazione (uguali o simili a quelli del login) */
+        .register-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .register-container h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            text-align: left;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Registrati</h2>
+        
+        <form th:action="@{/register}" method="post" th:object="${user}">
+            
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" th:field="*{name}" required>
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></p>
+            </div>
+            
+            <div class="form-group">
+                <label for="surname">Cognome:</label>
+                <input type="text" id="surname" th:field="*{surname}" required>
+                <p th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}" class="error-message"></p>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:field="*{email}" required>
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></p>
+            </div>
+			<!--
+            <div class="form-group">
+                <label for="dataNascita">Data di Nascita:</label>
+                <input type="date" id="dataNascita" th:field="*{dataNascita}" required>
+                <p th:if="${#fields.hasErrors('dataNascita')}" th:errors="*{dataNascita}" class="error-message"></p>
+            </div>
+			-->
+            <hr style="margin: 30px 0;">
+            <p>Dati di accesso</p>
+            
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" th:field="${credentials.username}" required>
+                <p th:if="${#fields.hasErrors('credentials.username')}" th:errors="*{credentials.username}" class="error-message"></p>
+                <p th:if="${usernameDuplicate != null}" th:text="${usernameDuplicate}" class="error-message"></p>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" th:field="${credentials.password}" required>
+              	<p th:if="${#fields.hasErrors('credentials.password')}" th:errors="*{credentials.password}" class="error-message"></p>
+            </div>
+            
+            <button type="submit" class="btn-submit">Registrati</button>
+        </form>
+        
+        <div class="login-link">
+            Hai già un account? <a href="/login">Accedi</a>
+        </div>
+    </div>
+</body>
+</html>

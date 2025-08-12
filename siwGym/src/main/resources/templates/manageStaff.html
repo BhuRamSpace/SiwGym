@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestione Staff - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="container">
+        <h2>Gestione Staff</h2>
+        
+        <a href="/admin/addStaff" class="btn btn-primary" style="margin-bottom: 1.5rem;">Aggiungi Nuovo Membro Staff</a>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Data di Inizio</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="staff : ${staffMembers}">
+                    <td th:text="${staff.id}"></td>
+                    <td th:text="${staff.name}"></td>
+                    <td th:text="${staff.surname}"></td>
+                    <td th:text="${#dates.format(staff.startDate, 'dd-MM-yyyy')}"></td>
+                    <td class="action-buttons">
+                        <a th:href="@{'/admin/viewStaff/' + ${staff.id}}" class="btn">Visualizza</a>
+                        <a th:href="@{'/admin/editStaff/' + ${staff.id}}" class="btn">Modifica</a>
+                        <a th:href="@{'/admin/deleteStaff/' + ${staff.id}}" class="btn btn-danger">Elimina</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="/admin/dashboard" class="btn" style="margin-top: 1.5rem;">Torna alla Dashboard</a>
+    </main>
+</body>
+</html>

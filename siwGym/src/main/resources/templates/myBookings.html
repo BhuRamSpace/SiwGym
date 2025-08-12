@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Le mie Prenotazioni - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .bookings-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .bookings-table th, .bookings-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .bookings-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h2>Le mie Prenotazioni</h2>
+        
+        <div th:if="${#lists.isEmpty(bookings)}">
+            <p>Non hai ancora effettuato nessuna prenotazione.</p>
+        </div>
+        
+        <div th:unless="${#lists.isEmpty(bookings)}">
+            <table class="bookings-table">
+                <thead>
+                    <tr>
+                        <th>Corso</th>
+                        <th>Trainer</th>
+                        <th>Data</th>
+                        <th>Orario</th>
+                        <th>Stato</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="booking : ${bookings}">
+                        <td th:text="${booking.courseName}"></td>
+                        <td th:text="${booking.trainerName}"></td>
+                        <td th:text="${#dates.format(booking.date, 'dd-MM-yyyy')}"></td>
+                        <td th:text="${booking.time}"></td>
+                        <td>
+                            <span th:text="${booking.status}" th:class="${booking.status == 'Confermata' ? 'text-success' : 'text-warning'}"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="/user/dashboard" class="btn btn-primary" style="margin-top: 1.5rem;">Torna alla Dashboard</a>
+    </main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestione Utenti - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f8f9fa;
+        }
+        .action-buttons a {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h2>Gestione Utenti</h2>
+        
+        <a href="/admin/addUser" class="btn btn-primary" style="margin-bottom: 1.5rem;">Aggiungi Nuovo Utente</a>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Email</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.surname}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td class="action-buttons">
+                        <a th:href="@{'/admin/viewUser/' + ${user.id}}" class="btn">Visualizza</a>
+                        <a th:href="@{'/admin/editUser/' + ${user.id}}" class="btn">Modifica</a>
+                        <a th:href="@{'/admin/deleteUser/' + ${user.id}}" class="btn btn-danger">Elimina</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="/admin/dashboard" class="btn" style="margin-top: 1.5rem;">Torna alla Dashboard</a>
+    </main>
+</body>
+</html>

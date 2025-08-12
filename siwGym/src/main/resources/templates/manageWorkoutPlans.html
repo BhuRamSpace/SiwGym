@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestione Schede di Allenamento - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="container">
+        <h2>Gestione Schede di Allenamento</h2>
+        
+        <a href="#" class="btn btn-primary" style="margin-bottom: 1.5rem;">Crea Nuova Scheda</a>
+        
+        <div th:if="${#lists.isEmpty(clients)}" class="card">
+            <p>Non hai ancora utenti assegnati da seguire.</p>
+        </div>
+        
+        <div th:unless="${#lists.isEmpty(clients)}">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome Cliente</th>
+                        <th>Stato Scheda</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="client : ${clients}">
+                        <td><span th:text="${client.name} + ' ' + ${client.surname}"></span></td>
+                        <td>
+                            <span th:if="${client.workoutPlan != null}">Assegnata</span>
+                            <span th:unless="${client.workoutPlan != null}">Da assegnare</span>
+                        </td>
+                        <td>
+                            <a th:href="@{'/trainer/assignWorkoutPlan/' + ${client.id}}" class="btn">Assegna</a>
+                            <a th:if="${client.workoutPlan != null}" th:href="@{'/trainer/viewWorkoutPlan/' + ${client.id}}" class="btn btn-primary">Visualizza/Modifica</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="/trainer/dashboard" class="btn" style="margin-top: 1.5rem;">Torna alla Dashboard</a>
+    </main>
+</body>
+</html>

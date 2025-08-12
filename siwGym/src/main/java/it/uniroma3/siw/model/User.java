@@ -3,7 +3,11 @@ package it.uniroma3.siw.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDate;
 import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "users")
@@ -23,9 +27,10 @@ public class User {
     @NotBlank(message = "L'email è obbligatoria")
     private String email;
 
-    @NotNull(message = "La data di nascita è obbligatoria")
+/*    @NotNull(message = "La data di nascita è obbligatoria")
     @Temporal(TemporalType.DATE)
-    private Date dataNascita;
+    @DateTimeFormat(pattern = "yyyy-MM-dd") // Aggiungi questa riga!
+    private LocalDate dataNascita;*/
 
     private String telefono;
     
@@ -53,8 +58,8 @@ public class User {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public Date getDataNascita() { return dataNascita; }
-    public void setDataNascita(Date dataNascita) { this.dataNascita = dataNascita; }
+    /*public LocalDate getDataNascita() { return dataNascita; }
+    public void setDataNascita(LocalDate dataNascita) { this.dataNascita = dataNascita; }*/
 
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }

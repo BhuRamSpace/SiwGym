@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestione Abbonamenti - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="container">
+        <h2>Gestione Abbonamenti</h2>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Utente</th>
+                    <th>Piano</th>
+                    <th>Data di Scadenza</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="subscription : ${subscriptions}">
+                    <td th:text="${subscription.user.name} + ' ' + ${subscription.user.surname}"></td>
+                    <td th:text="${subscription.plan}"></td>
+                    <td th:text="${#dates.format(subscription.endDate, 'dd-MM-yyyy')}"></td>
+                    <td>
+                        <span th:text="${subscription.isActive() ? 'Attivo' : 'Scaduto'}" th:class="${subscription.isActive() ? 'text-success' : 'text-danger'}"></span>
+                    </td>
+                    <td class="action-buttons">
+                        <a th:href="@{'/admin/viewSubscription/' + ${subscription.id}}" class="btn">Visualizza</a>
+                        <a th:href="@{'/admin/editSubscription/' + ${subscription.id}}" class="btn">Modifica</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="/admin/dashboard" class="btn" style="margin-top: 1.5rem;">Torna alla Dashboard</a>
+    </main>
+</body>
+</html>

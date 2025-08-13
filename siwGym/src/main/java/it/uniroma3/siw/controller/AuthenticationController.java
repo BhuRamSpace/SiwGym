@@ -32,7 +32,7 @@ public class AuthenticationController {
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("credentials", new Credentials());
-        return "formRegisterUser";
+        return "user/formRegisterUser";
     }
 
     /**
@@ -55,13 +55,13 @@ public class AuthenticationController {
         
         if (credentials != null) {
             if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
-                return "admin/indexAdmin";
+                return "staff/adminDashboard";
             }
             if (credentials.getRole().equals(Credentials.TRAINER_ROLE)) {
-                return "staff/indexStaff";
+                return "staff/trainerDashboard";
             }
         }
-        return "user/indexUser";
+        return "user/userDashboard";
 
     }
 
@@ -69,28 +69,35 @@ public class AuthenticationController {
      * Gestisce la richiesta POST per la registrazione di un nuovo utente.
      * Salva l'utente e le sue credenziali se i dati sono validi.
      */
-   @PostMapping(value = "/register")
+    @PostMapping(value = "/register")
     public String registerUser(@Valid @ModelAttribute("user") User user,
                                BindingResult userBindingResult,
                                @Valid @ModelAttribute("credentials") Credentials credentials,
                                BindingResult credentialsBindingResult,
                                Model model) {
-                               
-        // Controlla se l'username è già in uso prima di procedere
+
+        // Controllo username duplicato
         if (credentialsService.findByUsername(credentials.getUsername()).isPresent()) {
             model.addAttribute("usernameDuplicate", "Questo username è già in uso.");
-            return "formRegisterUser";
+            return "user/formRegisterUser";
         }
-        // Se user e credentials hanno entrambi contenuti validi, memorizza User e Credentials nel DB
+
         if (!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
             userService.save(user);
             credentials.setUser(user);
+
+            // 🔹 Imposta il ruolo di default SOLO se non è stato fornito dal form
+            if (credentials.getRole() == null || credentials.getRole().isBlank()) {
+                credentials.setRole(Credentials.DEFAULT_ROLE);
+            }
+
             credentialsService.save(credentials);
             model.addAttribute("user", user);
             model.addAttribute("registrationSuccess", true);
             return "registrationConfirmation";
         }
-        // Se ci sono errori, torna al form di registrazione
-        return "formRegisterUser";
-   	}
+
+        return "user/formRegisterUser";
+    }
+
 }

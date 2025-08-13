@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
+	<meta charset="UTF-8">
     <title>SiwGym - La tua palestra</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -33,11 +34,11 @@
                 <h2>Benvenuto in SiwGym</h2>
                 <p>La tua destinazione per il benessere e il fitness.</p>
                 <div sec:authorize="!isAuthenticated()">
-                    <a href="/register" class="btn btn-primary btn-large">Inizia ora</a>
+                    <a href="/register" class="btn btn-primary btn-large btn-hero">Inizia ora</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
                     <p>Bentornato, <span sec:authentication="name"></span>!</p>
-                    <a href="/success" class="btn btn-primary btn-large">Vai alla tua area personale</a>
+                    <a href="/success" class="btn btn-primary btn-large btn-hero">Vai alla tua area personale</a>
                 </div>
             </div>
         </section>
@@ -90,6 +91,7 @@
             text-decoration: none;
             color: #555;
             font-weight: bold;
+			font-size: 1.1rem;
         }
 
         .btn {
@@ -99,6 +101,11 @@
             font-weight: bold;
             transition: background-color 0.3s;
         }
+		
+		.btn-hero {
+		    margin-top: 15px;
+		    display: inline-block;
+		}
         
         .btn-primary {
             background-color: #007bff;
@@ -122,8 +129,12 @@
         }
 
         .hero-section h2 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
         }
+		
+		.hero-section p {
+		    font-size: 1.2rem;
+		}
 
         .btn-large {
             padding: 1rem 2rem;
@@ -153,6 +164,13 @@
             color: white;
             margin-top: 2rem;
         }
+		
+		.auth-buttons .btn {
+		    font-size: 1.05rem; /* leggermente più grande */
+		}
+		
+		</style>
+
     </style>
 </body>
 </html>

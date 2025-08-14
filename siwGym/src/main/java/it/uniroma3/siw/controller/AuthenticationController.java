@@ -69,6 +69,7 @@ public class AuthenticationController {
      * Gestisce la richiesta POST per la registrazione di un nuovo utente.
      * Salva l'utente e le sue credenziali se i dati sono validi.
      */
+    
     @PostMapping(value = "/register")
     public String registerUser(@Valid @ModelAttribute("user") User user,
                                BindingResult userBindingResult,
@@ -86,18 +87,34 @@ public class AuthenticationController {
             userService.save(user);
             credentials.setUser(user);
 
-            // 🔹 Imposta il ruolo di default SOLO se non è stato fornito dal form
+            // Ruolo di default
             if (credentials.getRole() == null || credentials.getRole().isBlank()) {
                 credentials.setRole(Credentials.DEFAULT_ROLE);
             }
 
             credentialsService.save(credentials);
+
+            // 🔹 Recupero utente loggato
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            boolean isAdmin = false;
+            if (principal instanceof UserDetails) {
+                String username = ((UserDetails) principal).getUsername();
+                Credentials currentCreds = credentialsService.findByUsername(username).orElse(null);
+                if (currentCreds != null && Credentials.ADMIN_ROLE.equals(currentCreds.getRole())) {
+                    isAdmin = true;
+                }
+            }
+
+            // Passo variabili alla view
             model.addAttribute("user", user);
             model.addAttribute("registrationSuccess", true);
+            model.addAttribute("isAdmin", isAdmin);
+
             return "registrationConfirmation";
         }
 
         return "user/formRegisterUser";
     }
+
 
 }

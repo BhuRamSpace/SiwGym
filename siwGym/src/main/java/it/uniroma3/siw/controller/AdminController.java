@@ -48,7 +48,7 @@ public class AdminController {
     
     // --- Pagine Dashboard Amministratore ---
 
-    @GetMapping({"/indexAdmin", "/dashboard"})
+    @GetMapping({"/adminDashboard"})
     public String indexAdmin() {
         return "staff/adminDashboard";
     }

@@ -48,7 +48,7 @@ public class AdminController {
     
     // --- Pagine Dashboard Amministratore ---
 
-    @GetMapping({"/indexAdmin"})
+    @GetMapping({"/indexAdmin", "/dashboard"})
     public String indexAdmin() {
         return "staff/adminDashboard";
     }
@@ -58,13 +58,13 @@ public class AdminController {
     @GetMapping("/manageCourses")
     public String listCourses(Model model) {
         model.addAttribute("courses", courseService.findAll());
-        return "staff/manageCourses"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/manageCourses";
     }
 
     @GetMapping("/courses/add")
     public String showCourseForm(Model model) {
         model.addAttribute("course", new Course());
-        return "staff/courseForm"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/courseForm";
     }
 
     @PostMapping("/courses/add")
@@ -75,7 +75,7 @@ public class AdminController {
             courseService.save(course);
             return "redirect:/admin/manageCourses";
         }
-        return "staff/courseForm"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/courseForm";
     }
 
     @GetMapping("/courses/delete/{id}")
@@ -89,14 +89,14 @@ public class AdminController {
     @GetMapping("/manageStaff")
     public String listStaff(Model model) {
         model.addAttribute("staff", staffService.findAll());
-        return "staff/manageStaff"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/manageStaff";
     }
 
     @GetMapping("/staff/add")
     public String showStaffForm(Model model) {
         model.addAttribute("staffMember", new Staff());
         model.addAttribute("credentials", new Credentials());
-        return "staff/staffForm"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/staffForm";
     }
 
     @PostMapping("/staff/add")
@@ -112,7 +112,7 @@ public class AdminController {
             credentialsService.save(credentials);
             return "redirect:/admin/manageStaff";
         }
-        return "staff/staffForm"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/staffForm";
     }
 
     @GetMapping("/staff/delete/{id}")
@@ -126,7 +126,65 @@ public class AdminController {
     @GetMapping("/manageUsers")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAll());
-        return "staff/manageUsers"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/manageUsers";
+    }
+    
+    @GetMapping("/addUser")
+    public String showAddUserForm(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("credentials", new Credentials());
+        model.addAttribute("isAdmin", true);
+        return "user/formRegisterUser";
+    }
+    
+    @PostMapping("/addUser")
+    public String addUser(@Valid @ModelAttribute("user") User user,
+                          BindingResult userBindingResult,
+                          @Valid @ModelAttribute("credentials") Credentials credentials,
+                          BindingResult credentialsBindingResult) {
+        if (userBindingResult.hasErrors() || credentialsBindingResult.hasErrors()) {
+            return "user/formRegisterUser";
+        }
+
+        userService.save(user);
+        credentials.setUser(user);
+        credentials.setRole(Credentials.DEFAULT_ROLE);
+        credentialsService.save(credentials);
+
+        return "redirect:/admin/manageUsers";
+    }
+    
+    @GetMapping("/viewUser/{id}")
+    public String viewUser(@PathVariable("id") Long id, Model model) {
+        Optional<User> userOptional = userService.findById(id);
+        if (userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+            return "staff/viewUser";
+        }
+        return "redirect:/admin/manageUsers";
+    }
+
+    @GetMapping("/editUser/{id}")
+    public String showEditUserForm(@PathVariable("id") Long id, Model model) {
+        Optional<User> userOptional = userService.findById(id);
+        if (userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+            return "staff/editUser";
+        }
+        return "redirect:/admin/manageUsers";
+    }
+
+    @PostMapping("/editUser/{id}")
+    public String editUser(@PathVariable("id") Long id,
+                           @Valid @ModelAttribute("user") User updatedUser,
+                           BindingResult bindingResult,
+                           Model model) {
+        if (!bindingResult.hasErrors()) {
+            userService.save(updatedUser);
+            return "redirect:/admin/manageUsers";
+        }
+        model.addAttribute("user", updatedUser);
+        return "staff/editUser";
     }
 
     @GetMapping("/users/delete/{id}")
@@ -138,7 +196,7 @@ public class AdminController {
     @GetMapping("/manageSubscriptions")
     public String listSubscriptions(Model model) {
         model.addAttribute("subscriptions", subscriptionService.findAll());
-        return "staff/manageSubscriptions"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/manageSubscriptions";
     }
 
     @GetMapping("/subscriptions/add/{userId}")
@@ -147,7 +205,7 @@ public class AdminController {
         if (userOptional.isPresent()) {
             model.addAttribute("user", userOptional.get());
             model.addAttribute("subscription", new Subscription());
-            return "staff/subscriptionForm"; // <--- Il file si trova in 'templates/staff/'
+            return "staff/subscriptionForm";
         }
         return "redirect:/admin/manageUsers";
     }
@@ -165,7 +223,7 @@ public class AdminController {
             return "redirect:/admin/manageSubscriptions";
         }
         model.addAttribute("user", userOptional.orElse(null));
-        return "staff/subscriptionForm"; // <--- Il file si trova in 'templates/staff/'
+        return "staff/subscriptionForm";
     }
 
     @GetMapping("/subscriptions/delete/{id}")

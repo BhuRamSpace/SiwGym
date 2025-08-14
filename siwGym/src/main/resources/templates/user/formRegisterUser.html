@@ -4,7 +4,7 @@
     <title>Registrazione - SiwGym</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Stili per la pagina di registrazione (uguali o simili a quelli del login) */
+		
         .register-container {
             max-width: 500px;
             margin: 50px auto;
@@ -14,7 +14,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .register-container h2 {
+        .register-container h1 {
             text-align: center;
             color: #007bff;
             margin-bottom: 30px;
@@ -31,15 +31,35 @@
         }
 
         .form-group input {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+			
         }
 
         .form-group input:focus {
             outline: none;
             border-color: #007bff;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
         }
 
         .btn-submit {
@@ -53,11 +73,25 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
+        .btn-submit-reduced {
+            flex-grow: 1; /* Permette al pulsante di occupare lo spazio disponibile */
+            margin-right: 10px; /* Spazio tra i due pulsanti */
+        }
         
         .btn-submit:hover {
             background-color: #218838;
         }
         
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
         .error-message {
             color: #dc3545;
             text-align: left;
@@ -73,7 +107,7 @@
 </head>
 <body>
     <div class="register-container">
-        <h2>Registrati</h2>
+        <h1 th:text="${isAdmin} ? 'Aggiungi Utente' : 'Registrati'">Registrati</h1>
         
         <form th:action="@{/register}" method="post" th:object="${user}">
             
@@ -94,14 +128,7 @@
                 <input type="email" id="email" th:field="*{email}" required>
                 <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></p>
             </div>
-			<!--
-            <div class="form-group">
-                <label for="dataNascita">Data di Nascita:</label>
-                <input type="date" id="dataNascita" th:field="*{dataNascita}" required>
-                <p th:if="${#fields.hasErrors('dataNascita')}" th:errors="*{dataNascita}" class="error-message"></p>
-            </div>
-			-->
-            <hr style="margin: 30px 0;">
+			<hr style="margin: 30px 0;">
             <p>Dati di accesso</p>
             
             <div class="form-group">
@@ -117,10 +144,13 @@
               	<p th:if="${#fields.hasErrors('credentials.password')}" th:errors="*{credentials.password}" class="error-message"></p>
             </div>
             
-            <button type="submit" class="btn-submit">Registrati</button>
+            <div th:class="${isAdmin} ? 'form-actions' : 'form-group'">
+                <button type="submit" class="btn-submit" th:classappend="${isAdmin} ? 'btn-submit-reduced' : ''">Conferma Registrazione</button>
+                <a th:if="${isAdmin}" th:href="@{/admin/manageUsers}" class="btn btn-secondary">Annulla</a>
+            </div>
         </form>
         
-        <div class="login-link">
+        <div class="login-link" th:unless="${isAdmin}">
             Hai già un account? <a href="/login">Accedi</a>
         </div>
     </div>

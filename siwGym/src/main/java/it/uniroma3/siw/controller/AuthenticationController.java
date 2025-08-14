@@ -94,26 +94,10 @@ public class AuthenticationController {
             credentialsService.save(credentials);
             model.addAttribute("user", user);
             model.addAttribute("registrationSuccess", true);
-            
-         // 🔹 Recupera le credenziali dell'utente che ha effettuato l'accesso
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Credentials loggedInCredentials = credentialsService.findByUsername(userDetails.getUsername()).orElse(null);
-
-            String redirectUrl;
-            if (loggedInCredentials != null && loggedInCredentials.getRole().equals(Credentials.ADMIN_ROLE)) {
-                // Se l'utente che registra è un admin, reindirizzalo al dashboard
-                redirectUrl = "/success";
-            } else {
-                // Altrimenti, reindirizzalo alla pagina di login
-                redirectUrl = "/login";
-            }
-            
-            model.addAttribute("redirectUrl", redirectUrl);
-
             return "registrationConfirmation";
         }
 
         return "user/formRegisterUser";
     }
-    
+
 }

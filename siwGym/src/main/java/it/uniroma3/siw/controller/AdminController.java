@@ -59,7 +59,7 @@ public class AdminController {
     @GetMapping("/manageStaff")
     public String listStaff(Model model) {
         model.addAttribute("staff", staffService.findAll());
-        return "staff/manageStaff";
+        return "staff/manageStaffFolder/manageStaff";
     }
     
     @GetMapping("/addStaff")
@@ -67,7 +67,7 @@ public class AdminController {
         model.addAttribute("staff", new Staff());
         model.addAttribute("credentials", new Credentials());
         model.addAttribute("isAdmin", true);
-        return "staff/addStaff";
+        return "staff/manageStaffFolder/addStaff";
     }
     
     @PostMapping("/addStaff")
@@ -76,14 +76,14 @@ public class AdminController {
                           @Valid @ModelAttribute("credentials") Credentials credentials,
                           BindingResult credentialsBindingResult) {
         if (userBindingResult.hasErrors() || credentialsBindingResult.hasErrors()) {
-            return "staff/addStaff";
+            return "staff/manageStaffFolder/addStaff";
         }
 
         staffService.save(staff);
         credentials.setStaff(staff);
         credentialsService.save(credentials);
 
-        return "staff/registrationConfirmationStaff";
+        return "staff/manageStaffFolder/registrationConfirmationStaff";
     }
 
 
@@ -92,7 +92,7 @@ public class AdminController {
     @GetMapping("/manageUsers")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAll());
-        return "staff/manageUsers";
+        return "staff/manageUserFolder/manageUsers";
     }
     
     @GetMapping("/addUser")
@@ -125,7 +125,7 @@ public class AdminController {
         Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
             model.addAttribute("user", userOptional.get());
-            return "staff/viewUser";
+            return "staff/manageUserFolder/viewUser";
         }
         return "redirect:/admin/manageUsers";
     }
@@ -135,7 +135,7 @@ public class AdminController {
         Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
             model.addAttribute("user", userOptional.get());
-            return "staff/editUser";
+            return "staff/manageUserFolder/editUser";
         }
         return "redirect:/admin/manageUsers";
     }
@@ -150,7 +150,7 @@ public class AdminController {
             return "redirect:/admin/manageUsers";
         }
         model.addAttribute("user", updatedUser);
-        return "staff/editUser";
+        return "staff/manageUserFolder/editUser";
     }
 
     @GetMapping("/users/delete/{id}")

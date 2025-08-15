@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Aggiungi Staff - SiwGym</title>
+    <style>
+        .register-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .register-container h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit-reduced {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Aggiungi Staff</h1>
+        
+        <form th:action="@{/admin/addStaff}" th:object="${staff}" method="post">
+                
+                <div class="form-group">
+                    <label for="name">Nome:</label>
+                    <input type="text" id="name" th:field="*{name}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="surname">Cognome:</label>
+                    <input type="text" id="surname" th:field="*{surname}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" th:field="*{email}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialization">Specializzazione:</label>
+                    <input type="text" id="specialization" th:field="*{specialization}">
+                </div>
+            
+            <div th:object="${credentials}">
+                
+                <div class="form-group">
+                   <label for="role">Ruolo:</label>
+                   <select id="role" th:field="*{role}" required>
+                       <option value="TRAINER">TRAINER</option>
+                       <option value="ADMIN">ADMIN</option>
+                   </select>
+                </div>
+                
+				
+			<hr style="margin: 30px 0;">
+			<p>Dati di accesso</p>
+				
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" th:field="*{username}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" th:field="*{password}" required>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-submit btn-submit-reduced">Aggiungi Staff</button>
+                <a href="/admin/manageStaff" class="btn btn-secondary">Annulla</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

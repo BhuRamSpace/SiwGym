@@ -171,17 +171,18 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Nome Corso</th>
-                    <th>Trainer</th>
-                    <th>Orario</th>
-                    <th>Azioni</th>
+                    <th>Capacità Massima</th>
+                    <th>Descrizione</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="course : ${courses}">
+                    <td th:text="${course.id}"></td>
                     <td th:text="${course.name}"></td>
-                    <td th:text="${course.trainer.name} + ' ' + ${course.trainer.surname}"></td>
-                    <td th:text="${course.schedule}"></td>
+                    <td th:text="${course.max_capacity}"></td>
+					<td th:text="${course.name}"></td>
                     <td>
                         <a th:href="@{'/admin/viewCourse/' + ${course.id}}" class="btn btn-secondary">Visualizza</a>
                         <a th:href="@{'/admin/editCourse/' + ${course.id}}" class="btn btn-secondary">Modifica</a>

@@ -175,8 +175,8 @@
                     <th>ID</th>
 					<th>Email</th>
                     <th>Nome</th>
-					<th>Specialization</th>
-                    <th>Cognome</th>
+					<th>Cognome</th>
+                    <th>Specialization</th>
                     <th>Azioni</th>
                 </tr>
             </thead>
@@ -185,8 +185,8 @@
                     <td th:text="${staff.id}"></td>
 					<td th:text="${staff.email}"></td>
                     <td th:text="${staff.name}"></td>
+					<td th:text="${staff.surname}"></td>
 					<td th:text="${staff.specialization}"></td>
-                    <td th:text="${staff.surname}"></td>
                     <td>
                         <a th:href="@{'/admin/viewStaff/' + ${staff.id}}" class="btn btn-secondary">Visualizza</a>
                         <a th:href="@{'/admin/editStaff/' + ${staff.id}}" class="btn btn-secondary">Modifica</a>

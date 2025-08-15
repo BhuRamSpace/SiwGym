@@ -53,75 +53,41 @@ public class AdminController {
         return "staff/adminDashboard";
     }
 
-    // --- Gestione Corsi ---
 
-    @GetMapping("/manageCourses")
-    public String listCourses(Model model) {
-        model.addAttribute("courses", courseService.findAll());
-        return "staff/manageCourses";
-    }
-
-    @GetMapping("/courses/add")
-    public String showCourseForm(Model model) {
-        model.addAttribute("course", new Course());
-        return "staff/courseForm";
-    }
-
-    @PostMapping("/courses/add")
-    public String addCourse(@Valid @ModelAttribute("course") Course course,
-                            BindingResult bindingResult,
-                            Model model) {
-        if (!bindingResult.hasErrors()) {
-            courseService.save(course);
-            return "redirect:/admin/manageCourses";
-        }
-        return "staff/courseForm";
-    }
-
-    @GetMapping("/courses/delete/{id}")
-    public String deleteCourse(@PathVariable("id") Long id) {
-        courseService.deleteById(id);
-        return "redirect:/admin/manageCourses";
-    }
-
-    // --- Gestione Staff ---
+    // --- Gestione Staff (Molte volte gli errori sono dati perche gli attributi nel html sono uguali al DB)---
 
     @GetMapping("/manageStaff")
     public String listStaff(Model model) {
         model.addAttribute("staff", staffService.findAll());
         return "staff/manageStaff";
     }
-
-    @GetMapping("/staff/add")
-    public String showStaffForm(Model model) {
-        model.addAttribute("staffMember", new Staff());
+    
+    @GetMapping("/addStaff")
+    public String showAddUStaffForm(Model model) {
+        model.addAttribute("staff", new Staff());
         model.addAttribute("credentials", new Credentials());
-        return "staff/staffForm";
+        model.addAttribute("isAdmin", true);
+        return "staff/addStaff";
     }
-
-    @PostMapping("/staff/add")
-    public String addStaff(@Valid @ModelAttribute("staffMember") Staff staff,
-                           BindingResult staffBindingResult,
-                           @Valid @ModelAttribute("credentials") Credentials credentials,
-                           BindingResult credentialsBindingResult,
-                           Model model) {
-        if (!staffBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
-            staffService.save(staff);
-            credentials.setStaff(staff);
-            credentials.setRole(Credentials.TRAINER_ROLE);
-            credentialsService.save(credentials);
-            return "redirect:/admin/manageStaff";
+    
+    @PostMapping("/addStaff")
+    public String addStaff(@Valid @ModelAttribute("staff") Staff staff,
+                          BindingResult userBindingResult,
+                          @Valid @ModelAttribute("credentials") Credentials credentials,
+                          BindingResult credentialsBindingResult) {
+        if (userBindingResult.hasErrors() || credentialsBindingResult.hasErrors()) {
+            return "staff/addStaff";
         }
-        return "staff/staffForm";
+
+        staffService.save(staff);
+        credentials.setStaff(staff);
+        credentialsService.save(credentials);
+
+        return "staff/registrationConfirmationStaff";
     }
 
-    @GetMapping("/staff/delete/{id}")
-    public String deleteStaff(@PathVariable("id") Long id) {
-        staffService.deleteById(id);
-        return "redirect:/admin/manageStaff";
-    }
 
-    // --- Gestione Utenti e Abbonamenti ---
+    // --- Gestione Utenti (Molte volte gli errori sono dati perche gli attributi nel html sono uguali al DB)---
 
     @GetMapping("/manageUsers")
     public String listUsers(Model model) {
@@ -191,44 +157,5 @@ public class AdminController {
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
         return "redirect:/admin/manageUsers";
-    }
-
-    @GetMapping("/manageSubscriptions")
-    public String listSubscriptions(Model model) {
-        model.addAttribute("subscriptions", subscriptionService.findAll());
-        return "staff/manageSubscriptions";
-    }
-
-    @GetMapping("/subscriptions/add/{userId}")
-    public String showSubscriptionForm(@PathVariable("userId") Long userId, Model model) {
-        Optional<User> userOptional = userService.findById(userId);
-        if (userOptional.isPresent()) {
-            model.addAttribute("user", userOptional.get());
-            model.addAttribute("subscription", new Subscription());
-            return "staff/subscriptionForm";
-        }
-        return "redirect:/admin/manageUsers";
-    }
-
-    @PostMapping("/subscriptions/add/{userId}")
-    public String addSubscription(@PathVariable("userId") Long userId,
-                                  @Valid @ModelAttribute("subscription") Subscription subscription,
-                                  BindingResult bindingResult,
-                                  Model model) {
-        Optional<User> userOptional = userService.findById(userId);
-        if (!bindingResult.hasErrors() && userOptional.isPresent()) {
-            User user = userOptional.get();
-            subscription.setUser(user);
-            subscriptionService.save(subscription);
-            return "redirect:/admin/manageSubscriptions";
-        }
-        model.addAttribute("user", userOptional.orElse(null));
-        return "staff/subscriptionForm";
-    }
-
-    @GetMapping("/subscriptions/delete/{id}")
-    public String deleteSubscription(@PathVariable("id") Long id) {
-        subscriptionService.deleteById(id);
-        return "redirect:/admin/manageSubscriptions";
     }
 }

@@ -158,4 +158,97 @@ public class AdminController {
         userService.deleteById(id);
         return "redirect:/admin/manageUsers";
     }
+    
+    // --- Gestione Corsi ---
+
+    @GetMapping("/manageCourses")
+    public String listCourses(Model model) {
+        model.addAttribute("courses", courseService.findAll());
+        return "staff/manageCoursesFolder/manageCourses";
+    }
+
+    @GetMapping("/addCourse")
+    public String showCourseForm(Model model) {
+        model.addAttribute("course", new Course());
+        return "staff/manageCoursesFolder/addCourse";
+    }
+
+    @PostMapping("/addCourse")
+    public String addCourse(@Valid @ModelAttribute("course") Course course,
+                            BindingResult bindingResult,
+                            Model model) {
+        if (!bindingResult.hasErrors()) {
+            courseService.save(course);
+            return "redirect:/admin/manageCourses";
+        }
+        return "staff/manageCoursesFolder/addCourse";
+    }
+
+    
+    @GetMapping("/viewCourse/{id}")
+    public String viewCourse(@PathVariable("id") Long id, Model model) {
+        Optional<Course> courseOptional = courseService.findById(id);
+        if (courseOptional.isPresent()) {
+            model.addAttribute("course", courseOptional.get());
+            return "staff/manageCoursesFolder/viewCourse";
+        }
+        return "redirect:/admin/manageCourses";
+    }
+
+    @GetMapping("/editCourse/{id}")
+    public String showEditCourseForm(@PathVariable("id") Long id, Model model) {
+        Optional<Course> courseOptional = courseService.findById(id);
+        if (courseOptional.isPresent()) {
+            model.addAttribute("course", courseOptional.get());
+            return "staff/manageCoursesFolder/editCourse";
+        }
+        return "redirect:/admin/manageCourses";
+    }
+
+  /*  @PostMapping("/editCourse/{id}")
+    public String editCourse(@PathVariable("id") Long id,
+                           @Valid @ModelAttribute("course") Course updatedCourse,
+                           BindingResult bindingResult,
+                           Model model) {
+        if (!bindingResult.hasErrors()) {
+        	courseService.save(updatedCourse);
+            return "redirect:/admin/manageCourses";
+        }
+        model.addAttribute("course", updatedCourse);
+        return "staff/manageCoursesFolder/editCourse";
+    }*/
+    
+    @PostMapping("/editCourse/{id}")
+    public String editCourse(@PathVariable("id") Long id,
+                             @Valid @ModelAttribute("course") Course updatedCourse,
+                             BindingResult bindingResult,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            return "staff/manageCoursesFolder/editCourse";
+        }
+
+        // 1. Recupera il corso esistente dal database usando l'ID
+        Optional<Course> existingCourseOptional = courseService.findById(id);
+
+        if (existingCourseOptional.isPresent()) {
+            Course existingCourse = existingCourseOptional.get();
+
+            // 2. Aggiorna solo i campi modificabili
+            existingCourse.setName(updatedCourse.getName());
+            existingCourse.setMaxCapacity(updatedCourse.getMaxCapacity());
+            existingCourse.setDescription(updatedCourse.getDescription());
+
+            // 3. Salva l'oggetto esistente e aggiornato nel database
+            courseService.save(existingCourse);
+        }
+
+        return "redirect:/admin/manageCourses";
+    }
+
+    @GetMapping("/deleteCourse/{id}")
+    public String deleteCourse(@PathVariable("id") Long id) {
+     	courseService.deleteById(id);
+        return "redirect:/admin/manageCourses";
+    }
+
 }

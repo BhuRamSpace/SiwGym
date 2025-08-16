@@ -175,14 +175,16 @@
                     <th>Nome Corso</th>
                     <th>Capacità Massima</th>
                     <th>Descrizione</th>
+					<th>Azioni</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="course : ${courses}">
                     <td th:text="${course.id}"></td>
                     <td th:text="${course.name}"></td>
-                    <td th:text="${course.max_capacity}"></td>
-					<td th:text="${course.name}"></td>
+                    <td th:text="${course.maxCapacity}"></td>
+					<td th:text="${course.description}"></td>
+					
                     <td>
                         <a th:href="@{'/admin/viewCourse/' + ${course.id}}" class="btn btn-secondary">Visualizza</a>
                         <a th:href="@{'/admin/editCourse/' + ${course.id}}" class="btn btn-secondary">Modifica</a>

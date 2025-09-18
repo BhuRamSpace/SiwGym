@@ -28,16 +28,16 @@
             font-weight: 600;
         }
 
-        .user-details p {
+        .course-details p {
             font-size: 1.1rem;
             margin: 15px 0;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
         }
 
-        .user-details strong {
+        .course-details strong {
             display: inline-block;
-            width: 120px;
+            width: 150px;
             color: #555;
         }
 
@@ -61,10 +61,57 @@
         .btn-secondary:hover {
             background-color: #5a6268;
         }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
 
         .text-center {
             text-align: center;
             margin-top: 30px;
+        }
+
+        .slots-section {
+            margin-top: 40px;
+            border-top: 2px solid #007bff;
+            padding-top: 20px;
+        }
+
+        .slots-section h3 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slot-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .slot-info p {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        .slot-info strong {
+            color: #007bff;
+        }
+        
+        .slot-actions a {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -77,6 +124,31 @@
             <p><strong>Nome Corso:</strong> <span th:text="${course.name}"></span></p>
             <p><strong>Capacità Massima:</strong> <span th:text="${course.maxCapacity}"></span></p>
             <p><strong>Descrizione:</strong> <span th:text="${course.description}"></span></p>
+        </div>
+        
+        <div class="text-center" style="margin-top: 20px;">
+            <a th:href="@{/admin/createCourseSlot/{courseId}(courseId=${course.id})}" class="btn btn-primary">Crea Slot</a>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(course.courseSlots)}" class="slots-section">
+            <h3>Slot di Corso Esistenti</h3>
+            <div th:each="slot : ${course.courseSlots}" class="slot-card">
+                <div class="slot-info">
+                    <p><strong>ID Slot:</strong> <span th:text="${slot.id}"></span></p>
+                    <p><strong>Trainer:</strong> <span th:text="${slot.trainer.name} + ' ' + ${slot.trainer.surname}"></span></p>
+                    <p><strong>Giorno:</strong> <span th:text="${slot.dayOfWeek}"></span></p>
+                    <p><strong>Orario:</strong> <span th:text="${#temporals.format(slot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(slot.endTime, 'HH:mm')}"></span></p>
+                    <p><strong>Prenotazioni:</strong> <span th:text="${#lists.size(slot.bookings)}"></span> / <span th:text="${slot.maxParticipants}"></span></p>
+                </div>
+                <div class="slot-actions">
+                    <a th:href="@{/admin/editCourseSlot/{slotId}(slotId=${slot.id})}" class="btn btn-secondary">Modifica</a>
+                    <a th:href="@{/admin/deleteCourseSlot/{slotId}(slotId=${slot.id})}" class="btn btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questo slot?');">Elimina</a>
+                </div>
+            </div>
+        </div>
+        
+        <div th:unless="${not #lists.isEmpty(course.courseSlots)}" class="slots-section text-center">
+            <p>Nessun slot di corso esistente per questo corso.</p>
         </div>
 
         <div class="text-center">

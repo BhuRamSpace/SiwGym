@@ -1,16 +1,17 @@
 package it.uniroma3.siw.controller;
 
 import it.uniroma3.siw.model.Course;
+import it.uniroma3.siw.model.CourseSlot;
 import it.uniroma3.siw.model.Staff;
-import it.uniroma3.siw.model.Subscription;
 import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.service.CourseService;
+import it.uniroma3.siw.service.CourseSlotService;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.StaffService;
-import it.uniroma3.siw.service.SubscriptionService;
 import it.uniroma3.siw.service.UserService;
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,9 @@ public class AdminController {
     
     @Autowired
     private CredentialsService credentialsService;
-
+    
     @Autowired
-    private SubscriptionService subscriptionService;
+    private CourseSlotService courseSlotService;
     
     // --- Pagine Dashboard Amministratore ---
 
@@ -204,19 +205,6 @@ public class AdminController {
         }
         return "redirect:/admin/manageCourses";
     }
-
-  /*  @PostMapping("/editCourse/{id}")
-    public String editCourse(@PathVariable("id") Long id,
-                           @Valid @ModelAttribute("course") Course updatedCourse,
-                           BindingResult bindingResult,
-                           Model model) {
-        if (!bindingResult.hasErrors()) {
-        	courseService.save(updatedCourse);
-            return "redirect:/admin/manageCourses";
-        }
-        model.addAttribute("course", updatedCourse);
-        return "staff/manageCoursesFolder/editCourse";
-    }*/
     
     @PostMapping("/editCourse/{id}")
     public String editCourse(@PathVariable("id") Long id,
@@ -251,4 +239,50 @@ public class AdminController {
         return "redirect:/admin/manageCourses";
     }
 
+    
+    // --- Gestione Slot Corsi ---
+    
+ /*   @GetMapping("/createCourseSlot/{courseId}")
+    public String createCourseSlot(@PathVariable("courseId") Long courseId, Model model) {
+        Course course = courseService.findById(courseId).orElse(null);
+        if (course == null) {
+            return "redirect:/admin/manageCourses"; // Gestisci il caso in cui il corso non esiste
+        }
+
+        // Qui il nome della variabile `staff` è corretto
+        Iterable<Staff> staff = staffService.findTrainers(); 
+        
+        // Aggiungi un nuovo CourseSlot al modello
+        CourseSlot courseSlot = new CourseSlot();
+        courseSlot.setCourse(course);
+
+        model.addAttribute("course", course);
+        model.addAttribute("trainers", staff); // Nome `trainers` nel modello per coerenza con l'HTML
+        model.addAttribute("courseSlot", courseSlot);
+        
+        return "staff/manageCoursesFolder/createCourseSlot";
+    }
+    
+    @PostMapping("/courseSlots")
+    public String saveCourseSlot(@Valid @ModelAttribute("courseSlot") CourseSlot courseSlot, BindingResult bindingResult, Model model) {
+
+        // Se il trainer non è stato selezionato, aggiungi un errore manuale
+        if (courseSlot.getTrainer() == null || courseSlot.getTrainer().getId() == null) {
+            bindingResult.rejectValue("trainer", "trainer.required", "Selezionare un trainer è obbligatorio.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            // Ritorna al form con i dati e gli errori
+            model.addAttribute("course", courseSlot.getCourse());
+            model.addAttribute("trainers", staffService.findTrainers());
+            return "staff/manageCoursesFolder/createCourseSlot";
+        }
+
+        // Salva il CourseSlot
+        courseSlotService.save(courseSlot);
+        
+        // Reindirizza l'utente alla pagina dei dettagli del corso
+        return "redirect:/admin/viewCourse/" + courseSlot.getCourse().getId();
+    }*/
+    
 }

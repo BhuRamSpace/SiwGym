@@ -110,6 +110,14 @@
         .main-content {
             flex-grow: 1;
         }
+		
+		.main-content h2 {
+		    margin-top: 0;
+		    margin-bottom: 1rem;
+		    text-align: left;
+		    font-size: 2rem;
+		    color: #333;
+		}
         
         .info-cards {
             display: grid;
@@ -188,9 +196,9 @@
             <div class="sidebar">
                 <h3>Navigazione</h3>
                 <nav class="sidebar-menu">
-                    <a href="/trainer/dashboard">Dashboard</a>
-                    <a href="/trainer/myCourses">I miei Corsi</a>
-                    <a href="/trainer/manageWorkoutPlans">Gestione Schede</a>
+                    <a href="/">Home Page</a>
+                    <a href="/staff/myCourses">I miei Corsi</a>
+                    <a href="/staff/Bookings">Gestione Prenotazioni</a>
                 </nav>
             </div>
             
@@ -203,12 +211,6 @@
                         <h3>Corsi che tieni</h3>
                         <p>Hai <strong><span th:text="${courseCount}"></span></strong> corsi attivi questa settimana.</p>
                         <a href="/trainer/myCourses" class="btn btn-secondary">Vai ai corsi</a>
-                    </div>
-                    
-                    <div class="info-card">
-                        <h3>Utenti da seguire</h3>
-                        <p>Hai <strong><span th:text="${clientCount}"></span></strong> utenti che segui attualmente.</p>
-                        <a href="/trainer/manageWorkoutPlans" class="btn btn-secondary">Gestisci le schede</a>
                     </div>
                 </div>
             </div>

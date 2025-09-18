@@ -30,18 +30,9 @@ public class UserController {
 
     @Autowired
     private BookingService bookingService;
-    
-    @Autowired
-    private WorkoutPlanService workoutPlanService;
-
-    @Autowired
-    private WorkoutPlanDetailService workoutPlanDetailService;
 
     @Autowired
     private CredentialsService credentialsService;
-
-    @Autowired
-    private SubscriptionService subscriptionService;
 
     // --- Dashboard Utente ---
     
@@ -129,11 +120,11 @@ public class UserController {
             CourseSlot courseSlot = slotOptional.get();
 
             // Logica di controllo: abbonamento valido e posti disponibili
-            boolean hasValidSubscription = subscriptionService.isValidSubscription(user);
+            
             boolean hasSpace = bookingService.countBookingsForSlot(courseSlot) < courseSlot.getMaxParticipants();
             boolean alreadyBooked = bookingService.isBookedByUser(courseSlot, user);
 
-            if (hasValidSubscription && hasSpace && !alreadyBooked) {
+            if (hasSpace && !alreadyBooked) {
                 Booking newBooking = new Booking();
                 newBooking.setUser(user);
                 newBooking.setCourseSlot(courseSlot);
@@ -152,30 +143,5 @@ public class UserController {
     public String cancelBooking(@PathVariable("bookingId") Long bookingId) {
         bookingService.deleteById(bookingId);
         return "redirect:/user/bookings";
-    }
-
-    // --- Gestione Schede Allenamento (WorkoutPlan) ---
-    
-    @GetMapping("/workoutPlans")
-    public String listMyWorkoutPlans(Model model) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Credentials credentials = credentialsService.findByUsername(userDetails.getUsername()).orElse(null);
-
-        if (credentials != null) {
-            model.addAttribute("workoutPlans", workoutPlanService.findByUser(credentials.getUser()));
-            return "user/myWorkoutPlans";
-        }
-        return "errorPage";
-    }
-
-    @GetMapping("/workoutPlans/{id}")
-    public String viewWorkoutPlanDetails(@PathVariable("id") Long id, Model model) {
-        WorkoutPlan workoutPlan = workoutPlanService.findById(id).orElse(null);
-        if (workoutPlan != null) {
-            model.addAttribute("workoutPlan", workoutPlan);
-            model.addAttribute("details", workoutPlanDetailService.findByWorkoutPlan(workoutPlan));
-            return "user/workoutPlanDetails";
-        }
-        return "redirect:/user/workoutPlans";
     }
 }

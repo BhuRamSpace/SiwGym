@@ -39,9 +39,6 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Credentials credentials;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Subscription subscription;
-
     public User() {}
 
     // --- Metodi Getters e Setters ---
@@ -67,8 +64,6 @@ public class User {
     public String getIndirizzo() { return indirizzo; }
     public void setIndirizzo(String indirizzo) { this.indirizzo = indirizzo; }
     
-    public Subscription getSubscription() { return subscription; }
-    public void setSubscription(Subscription subscription) { this.subscription = subscription; }
     
     public Credentials getCredentials() { return credentials; }
     public void setCredentials(Credentials credentials) { this.credentials = credentials; }

@@ -11,7 +11,6 @@ import it.uniroma3.siw.service.StaffService;
 import it.uniroma3.siw.service.UserService;
 import jakarta.validation.Valid;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,47 +241,57 @@ public class AdminController {
     
     // --- Gestione Slot Corsi ---
     
- /*   @GetMapping("/createCourseSlot/{courseId}")
+    // Metodo GET per mostrare il form di creazione dello slot
+    @GetMapping("/createCourseSlot/{courseId}")
     public String createCourseSlot(@PathVariable("courseId") Long courseId, Model model) {
-        Course course = courseService.findById(courseId).orElse(null);
-        if (course == null) {
-            return "redirect:/admin/manageCourses"; // Gestisci il caso in cui il corso non esiste
-        }
-
-        // Qui il nome della variabile `staff` è corretto
-        Iterable<Staff> staff = staffService.findTrainers(); 
+        Optional<Course> courseOptional = courseService.findById(courseId);
         
-        // Aggiungi un nuovo CourseSlot al modello
+        if (courseOptional.isEmpty()) {
+            return "redirect:/admin/manageCourses";
+        }
+        
+        Course course = courseOptional.get();
+
+        Iterable<Staff> allStaff = staffService.findAll();
+        
         CourseSlot courseSlot = new CourseSlot();
         courseSlot.setCourse(course);
 
         model.addAttribute("course", course);
-        model.addAttribute("trainers", staff); // Nome `trainers` nel modello per coerenza con l'HTML
+        model.addAttribute("trainers", allStaff); // Usa "trainers" per coerenza con l'HTML
         model.addAttribute("courseSlot", courseSlot);
         
         return "staff/manageCoursesFolder/createCourseSlot";
     }
-    
+
+    // Metodo POST per salvare il nuovo slot
     @PostMapping("/courseSlots")
     public String saveCourseSlot(@Valid @ModelAttribute("courseSlot") CourseSlot courseSlot, BindingResult bindingResult, Model model) {
-
-        // Se il trainer non è stato selezionato, aggiungi un errore manuale
+        
+        // Verifica se l'ID dello staff è stato selezionato dal form
         if (courseSlot.getTrainer() == null || courseSlot.getTrainer().getId() == null) {
-            bindingResult.rejectValue("trainer", "trainer.required", "Selezionare un trainer è obbligatorio.");
+            bindingResult.rejectValue("trainer", "trainer.required", "Selezionare un membro dello staff è obbligatorio.");
         }
-
+        
         if (bindingResult.hasErrors()) {
-            // Ritorna al form con i dati e gli errori
             model.addAttribute("course", courseSlot.getCourse());
-            model.addAttribute("trainers", staffService.findTrainers());
+            model.addAttribute("trainers", staffService.findAll());
             return "staff/manageCoursesFolder/createCourseSlot";
         }
-
-        // Salva il CourseSlot
+        
+        // Carica l'entità Staff completa dal database usando l'ID ricevuto dal form
+        Optional<Staff> trainerOptional = staffService.findById(courseSlot.getTrainer().getId());
+        if (trainerOptional.isPresent()) {
+            // Se lo staff è stato trovato, impostalo sull'oggetto courseSlot
+            courseSlot.setTrainer(trainerOptional.get());
+        } else {
+            // Gestisci l'errore se lo staff non viene trovato
+            return "redirect:/error"; 
+        }
+        
+        // Salva lo slot, che ora ha l'entità Staff completa
         courseSlotService.save(courseSlot);
         
-        // Reindirizza l'utente alla pagina dei dettagli del corso
         return "redirect:/admin/viewCourse/" + courseSlot.getCourse().getId();
-    }*/
-    
+    }
 }

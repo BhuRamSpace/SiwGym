@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Modifica Staff - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+		
+		.btn {
+		    display: inline-flex;
+		    align-items: center;
+		    justify-content: center;
+		    height: 45px; /* stessa altezza per entrambi */
+		    font-size: 1rem; /* stessa dimensione testo */
+		    font-family: Arial, sans-serif; /* stesso font */
+		    padding: 0 20px; /* solo padding orizzontale */
+		    border-radius: 5px;
+		    font-weight: bold;
+		    text-align: center;
+		    text-decoration: none;
+		    transition: background-color 0.3s ease;
+		    cursor: pointer;
+		    border: none;
+		}
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Modifica Staff</h2>
+
+        <form th:action="@{/admin/editStaff/{id}(id=${staff.id})}" th:object="${staff}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" th:field="*{name}" required />
+            </div>
+
+            <div class="form-group">
+                <label for="surname">Cognome:</label>
+                <input type="text" id="surname" th:field="*{surname}" required />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:field="*{email}" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="specialization">Specializzazione:</label>
+                <input type="text" id="specialization" th:field="*{specialization}" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                <a href="/admin/manageStaff" class="btn btn-secondary">Annulla</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

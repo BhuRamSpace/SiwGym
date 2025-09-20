@@ -40,8 +40,21 @@ public class CourseSlotService {
         return courseSlotRepository.findByTrainer(trainer);
     }
 
+    public void deleteByTrainer(Staff trainer) {
+        courseSlotRepository.deleteByTrainer(trainer);
+    }
+    
     @Transactional
     public void deleteById(Long id) {
         courseSlotRepository.deleteById(id);
+    }
+	
+	@Transactional
+	public void deleteAll(List<CourseSlot> courseSlots) {
+	    courseSlotRepository.deleteAll(courseSlots);
+	}
+	
+    public long count() {
+        return courseSlotRepository.count();
     }
 }

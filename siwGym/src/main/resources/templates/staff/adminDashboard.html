@@ -89,7 +89,7 @@
 
         .info-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minminmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit);
             gap: 1.5rem;
             margin-top: 2rem;
         }
@@ -177,17 +177,24 @@
                 
                 <div class="info-cards">
                     <div class="info-card">
-                        <h3>Utenti Registrati</h3>
-                        <p><strong th:text="${userCount}">150</strong></p>
+                        <h3>Utenti Registrati:</h3>
+                        <p><strong th:text="${userCount}">0</strong></p>
                     </div>
                     <div class="info-card">
-                        <h3>Membri dello Staff</h3>
-                        <p><strong th:text="${staffCount}">5</strong></p>
+                        <h3>Membri dello Staff:</h3>
+						<p><strong th:text="${staffCount}">0</strong>
+						   Admin: <strong th:text="${adminCount}">0</strong>
+						   <br>Trainer: <strong th:text="${trainerCount}">0</strong>
+						</p>
                     </div>
                     <div class="info-card">
-                        <h3>Corsi Attivi</h3>
-                        <p><strong th:text="${courseCount}">20</strong></p>
+                        <h3>Corsi Attivi:</h3>
+                        <p><strong th:text="${courseCount}">0</strong></p>
                     </div>
+					<div class="info-card">
+					    <h3>Slot Attivi:</h3>
+					    <p><strong th:text="${courseSlotCount}">0</strong></p>
+					</div>
                 </div>
             </div>
         </div>

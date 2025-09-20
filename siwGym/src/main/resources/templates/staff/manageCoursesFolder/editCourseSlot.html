@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Crea Slot per Corso - SiwGym</title>
+    <title>Modifica Slot per Corso - SiwGym</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
         body {
@@ -93,13 +93,11 @@
 </head>
 <body>
     <div class="container">
-        <h2 th:text="'Crea Slot per ' + ${course.name}">Crea Slot per Corso</h2>
-		
-		<form th:action="@{/admin/courseSlots}" th:object="${courseSlot}" method="POST">
-		           <div th:if="${#fields.hasGlobalErrors()}" class="error-container">
-		               <p th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="error"></p>
-		           </div>
-		         
+        <h2>Modifica Slot per Corso</h2>
+
+        <form th:action="@{/admin/editCourseSlot/{id}(id=${courseSlot.id})}" th:object="${courseSlot}" method="POST">
+            
+            <input type="hidden" th:field="*{id}" />
             <input type="hidden" th:field="*{course}" />
             
             <div class="form-group">
@@ -145,8 +143,8 @@
             </div>
             
             <div class="btn-container">
-                <button type="submit" class="btn btn-primary">Crea Slot</button>
-				<a th:href="@{/admin/viewCourse/{id}(id=${courseSlot.course.id})}" class="btn btn-secondary">Annulla</a>
+                <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                <a th:href="@{/admin/viewCourse/{id}(id=${courseSlot.course.id})}" class="btn btn-secondary">Annulla</a>
             </div>
         </form>
     </div>

@@ -1,6 +1,7 @@
 package it.uniroma3.siw.service;
 
 import it.uniroma3.siw.model.Credentials;
+import it.uniroma3.siw.model.Staff;
 import it.uniroma3.siw.repository.CredentialsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,4 +38,17 @@ public class CredentialsService {
     public void deleteById(Long id) {
         credentialsRepository.deleteById(id);
     }
+    
+    public Optional<Credentials> findByStaff(Staff staff) {
+        return credentialsRepository.findByStaff(staff);
+    }
+
+    public void delete(Credentials credentials) {
+        credentialsRepository.delete(credentials);
+    }
+	
+/*    public long countByRole(String role) {
+        return credentialsRepository.countByRole(role);
+    }*/
+
 }

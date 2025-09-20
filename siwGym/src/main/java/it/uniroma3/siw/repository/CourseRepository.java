@@ -11,5 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface CourseRepository extends CrudRepository<Course, Long> {
 	
 	public Optional<Course> findByName(String name);
+	long count();
 	
 }

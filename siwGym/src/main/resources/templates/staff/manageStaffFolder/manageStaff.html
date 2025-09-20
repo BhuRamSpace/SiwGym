@@ -190,7 +190,7 @@
                     <td>
                         <a th:href="@{'/admin/viewStaff/' + ${staff.id}}" class="btn btn-secondary">Visualizza</a>
                         <a th:href="@{'/admin/editStaff/' + ${staff.id}}" class="btn btn-secondary">Modifica</a>
-                        <a th:href="@{'/admin/deleteStaff/' + ${staff.id}}" class="btn btn-danger">Elimina</a>
+						<a th:href="@{'/admin/deleteStaff/' + ${staff.id}}" onclick="return confirmDeletion(event);" class="btn btn-danger">Elimina</a>
                     </td>
                 </tr>
             </tbody>
@@ -200,5 +200,20 @@
             <a href="/admin/adminDashboard" class="btn btn-secondary">Torna alla Dashboard</a>
         </div>
     </main>
+	<script>
+	    function confirmDeletion(event) {
+	        // Mostra il messaggio di conferma.
+	        const isConfirmed = confirm("Sei sicuro di voler eliminare questo membro dello staff? Verranno eliminati anche tutti i corsi slot a lui associati.");
+	
+	        // Se l'utente clicca su "Annulla", impedisci l'azione predefinita del link.
+	        if (!isConfirmed) {
+	            event.preventDefault();
+	            return false;
+	        }
+	
+	        // Se l'utente clicca su "OK", l'azione prosegue normalmente.
+	        return true;
+	    }
+	</script>
 </body>
 </html>

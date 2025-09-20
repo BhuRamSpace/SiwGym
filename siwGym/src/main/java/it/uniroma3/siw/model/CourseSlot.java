@@ -1,18 +1,25 @@
 package it.uniroma3.siw.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
+import it.uniroma3.siw.controller.validator.TimeOrderConstraint;
+import it.uniroma3.siw.controller.validator.MaxParticipantsConstraint;
 
 @Entity
 @Table(name = "course_slots")
+@TimeOrderConstraint
+@MaxParticipantsConstraint
 public class CourseSlot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @NotNull(message = "Il numero massimo di partecipanti è obbligatorio.")
     private Integer maxParticipants;
 
     // Relazione molti-a-uno con la classe Course
@@ -25,6 +32,7 @@ public class CourseSlot {
     @JoinColumn(name = "trainer_id")
     private Staff trainer;
 
+    @NotNull(message = "Selezionare il giorno della settimana è obbligatorio.")
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
 

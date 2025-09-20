@@ -11,6 +11,7 @@ import it.uniroma3.siw.service.StaffService;
 import it.uniroma3.siw.service.UserService;
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +49,44 @@ public class AdminController {
     
     // --- Pagine Dashboard Amministratore ---
 
-    @GetMapping({"/adminDashboard"})
+/*    @GetMapping({"/adminDashboard"})
     public String indexAdmin() {
         return "staff/adminDashboard";
-    }
+    }*/
 
+    
+    @GetMapping({"/adminDashboard"})
+    public String indexAdmin(Model model) {
+        
+        // Calcola il numero totale di utenti registrati
+        long userCount = userService.count();
+        System.out.println("Conteggio utenti dal Service: " + userCount);
+        
+        // Calcola il numero totale di membri dello staff
+ //       long staffCount = staffService.count();
+        
+       /* // Calcola il numero di admin (assumendo che il ruolo sia 'ADMIN')
+        long adminCount = credentialsService.countByRole("ADMIN"); 
+        
+        // Calcola il numero di trainer (assumendo che il ruolo sia 'TRAINER' o simile)
+        long trainerCount = credentialsService.countByRole("TRAINER");*/
+        
+        // Calcola il numero totale di corsi (assumendo che tutti i corsi esistenti siano "attivi")
+//        long courseCount = courseService.count();
+        
+        // Calcola il numero totale di slot attivi di tutti i corsi
+//        long courseSlotCount = courseSlotService.count();
+
+        // Aggiungi gli attributi al modello
+        model.addAttribute("userCount", userCount);
+     //   model.addAttribute("staffCount", staffCount);
+     //   model.addAttribute("adminCount", adminCount);
+     //   model.addAttribute("trainerCount", trainerCount);
+     //   model.addAttribute("courseCount", courseCount);
+     //   model.addAttribute("courseSlotCount", courseSlotCount);
+
+        return "staff/adminDashboard";
+    }
 
     // --- Gestione Staff (Molte volte gli errori sono dati perche gli attributi nel html sono uguali al DB)---
 
@@ -86,6 +120,69 @@ public class AdminController {
         return "staff/manageStaffFolder/registrationConfirmationStaff";
     }
 
+    
+    @GetMapping("/viewStaff/{id}")
+    public String viewStaff(@PathVariable("id") Long id, Model model) {
+        Optional<Staff> staffOptional = staffService.findById(id);
+        if (staffOptional.isPresent()) {
+            model.addAttribute("staff", staffOptional.get());
+            return "staff/manageStaffFolder/viewStaff";
+        }
+        return "redirect:/admin/manageStaff";
+    }
+    
+    
+    @GetMapping("/editStaff/{id}")
+    public String showEditStaffForm(@PathVariable("id") Long id, Model model) {
+        Optional<Staff> staffOptional = staffService.findById(id);
+        if (staffOptional.isEmpty()) {
+            return "redirect:/admin/manageStaff";
+        }
+        model.addAttribute("staff", staffOptional.get());
+        return "staff/manageStaffFolder/editStaff"; // Corretto il percorso del template
+    }
+
+    @PostMapping("/editStaff/{id}")
+    public String editStaff(@PathVariable("id") Long id,
+                            @Valid @ModelAttribute("staff") Staff updatedStaff,
+                            BindingResult bindingResult,
+                            Model model) {
+        if (!bindingResult.hasErrors()) {
+            Staff existingStaff = staffService.findById(id).orElse(null);
+            if (existingStaff != null) {
+                existingStaff.setName(updatedStaff.getName());
+                existingStaff.setSurname(updatedStaff.getSurname());
+                existingStaff.setEmail(updatedStaff.getEmail());
+                existingStaff.setSpecialization(updatedStaff.getSpecialization());
+                staffService.save(existingStaff);
+            }
+            return "redirect:/admin/manageStaff";
+        }
+        return "staff/manageStaffFolder/editStaff"; // Corretto il percorso del template
+    }
+    	
+    
+    @GetMapping("/deleteStaff/{id}")
+    public String deleteStaff(@PathVariable("id") Long id) {
+        Optional<Staff> staffOptional = staffService.findById(id);
+        if (staffOptional.isPresent()) {
+            Staff staffToDelete = staffOptional.get();
+
+            // 1. Elimina le credenziali associate al membro dello staff
+            Optional<Credentials> credentialsOptional = credentialsService.findByStaff(staffToDelete);
+            credentialsOptional.ifPresent(credentialsService::delete);
+            
+            // 2. Elimina gli slot corso associati al membro dello staff
+            List<CourseSlot> courseSlots = courseSlotService.findByTrainer(staffToDelete);
+            courseSlotService.deleteAll(courseSlots);
+
+            // 3. Ora è possibile eliminare l'entità Staff
+            staffService.deleteById(id);
+        }
+        return "redirect:/admin/manageStaff";
+    }
+    
+    
 
     // --- Gestione Utenti (Molte volte gli errori sono dati perche gli attributi nel html sono uguali al DB)---
 
@@ -252,13 +349,13 @@ public class AdminController {
         
         Course course = courseOptional.get();
 
-        Iterable<Staff> allStaff = staffService.findAll();
+        Iterable<Staff> trainers = staffService.findTrainers();
         
         CourseSlot courseSlot = new CourseSlot();
         courseSlot.setCourse(course);
 
         model.addAttribute("course", course);
-        model.addAttribute("trainers", allStaff); // Usa "trainers" per coerenza con l'HTML
+        model.addAttribute("trainers", trainers);
         model.addAttribute("courseSlot", courseSlot);
         
         return "staff/manageCoursesFolder/createCourseSlot";
@@ -293,5 +390,99 @@ public class AdminController {
         courseSlotService.save(courseSlot);
         
         return "redirect:/admin/viewCourse/" + courseSlot.getCourse().getId();
+    }
+    
+ // Metodo GET per mostrare il form di modifica dello slot
+    @GetMapping("/editCourseSlot/{id}")
+    public String showEditCourseSlotForm(@PathVariable("id") Long id, Model model) {
+        // Carica lo slot da modificare
+        Optional<CourseSlot> courseSlotOptional = courseSlotService.findById(id);
+        
+        if (courseSlotOptional.isEmpty()) {
+            // Se lo slot non esiste, reindirizza
+            return "redirect:/admin/manageCourses"; // O una pagina di errore
+        }
+        
+        CourseSlot courseSlot = courseSlotOptional.get();
+
+        // Passa la lista dei trainer (o di tutto lo staff) al modello
+        Iterable<Staff> trainers = staffService.findTrainers();
+        
+        model.addAttribute("courseSlot", courseSlot);
+        model.addAttribute("trainers", trainers);
+        
+        return "staff/manageCoursesFolder/editCourseSlot";
+    }
+    
+    
+    @PostMapping("/editCourseSlot/{id}")
+    public String editCourseSlot(@PathVariable("id") Long id,
+                                 @Valid @ModelAttribute("courseSlot") CourseSlot updatedCourseSlot,
+                                 BindingResult bindingResult,
+                                 Model model) {
+
+        // Prima di tutto, verifica se ci sono errori di validazione del form
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("trainers", staffService.findTrainers());
+            return "staff/manageCoursesFolder/editCourseSlot";
+        }
+        
+        // Cerca lo slot del corso esistente nel database
+        Optional<CourseSlot> existingCourseSlotOptional = courseSlotService.findById(id);
+
+        if (existingCourseSlotOptional.isPresent()) {
+            CourseSlot existingCourseSlot = existingCourseSlotOptional.get();
+
+            // 1. Carica l'entità Staff completa usando l'ID ricevuto dal form.
+            // Il form invia l'ID del trainer, che si trova in updatedCourseSlot.getTrainer().getId()
+            Optional<Staff> trainerOptional = staffService.findById(updatedCourseSlot.getTrainer().getId());
+
+            if (trainerOptional.isPresent()) {
+                // 2. Aggiorna i campi dello slot esistente con i dati del form.
+                // Imposta l'oggetto Staff completo che hai appena caricato.
+                existingCourseSlot.setTrainer(trainerOptional.get());
+                existingCourseSlot.setDayOfWeek(updatedCourseSlot.getDayOfWeek());
+                existingCourseSlot.setStartTime(updatedCourseSlot.getStartTime());
+                existingCourseSlot.setEndTime(updatedCourseSlot.getEndTime());
+                existingCourseSlot.setMaxParticipants(updatedCourseSlot.getMaxParticipants());
+
+                // 3. Salva l'oggetto esistente e aggiornato nel database
+                courseSlotService.save(existingCourseSlot);
+            
+                // Reindirizza alla pagina del corso
+                return "redirect:/admin/viewCourse/" + existingCourseSlot.getCourse().getId();
+            } else {
+                // Gestisci il caso in cui il trainer non viene trovato nel database
+                // (es. l'ID inviato dal form non esiste)
+                // Aggiungi un errore per informare l'utente
+                bindingResult.rejectValue("trainer", "trainer.notFound", "Trainer non trovato.");
+                model.addAttribute("trainers", staffService.findTrainers());
+                return "staff/manageCoursesFolder/editCourseSlot";
+            }
+        }
+
+        // Se lo slot non esiste, reindirizza a una pagina di gestione
+        return "redirect:/admin/manageCourses";
+    }
+    
+    
+    @GetMapping("/deleteCourseSlot/{id}")
+    public String deleteCourseSlot(@PathVariable("id") Long id, Model model) {
+        // Cerca lo slot del corso per ottenere l'ID del corso prima di eliminarlo
+        Optional<CourseSlot> courseSlotOptional = courseSlotService.findById(id);
+
+        if (courseSlotOptional.isPresent()) {
+            // Ottieni l'ID del corso per reindirizzare alla pagina corretta
+            Long courseId = courseSlotOptional.get().getCourse().getId();
+
+            // Elimina lo slot del corso dal database
+            courseSlotService.deleteById(id);
+            
+            // Reindirizza alla pagina del corso per mostrare lo stato aggiornato
+            return "redirect:/admin/viewCourse/" + courseId;
+        }
+
+        // Se lo slot non esiste, reindirizza a una pagina di gestione
+        return "redirect:/admin/manageCourses";
     }
 }

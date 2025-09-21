@@ -14,6 +14,7 @@ public interface CourseSlotRepository extends CrudRepository<CourseSlot, Long> {
 	
 	public List<CourseSlot> findByCourse(Course course);
 	public List<CourseSlot> findByTrainer(Staff trainer);
+	public List<CourseSlot> findByCourseId(Long courseId);
 	void deleteByTrainer(Staff trainer);
 	long count();
 	

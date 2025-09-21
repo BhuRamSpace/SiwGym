@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Partecipanti Slot - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Stili unificati (copiati da viewCourseSlots.html) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .slot-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .slot-info p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-bar input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 70%;
+        }
+
+        .search-bar button {
+            padding: 8px 12px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #555;
+        }
+        
+        .btn-danger {
+		    background-color: #dc3545;
+		    color: white;
+		}
+		
+		.btn-danger:hover {
+		    background-color: #c82333;
+		}
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 th:text="'Partecipanti: ' + ${courseSlot.course.name}"></h2>
+        <div class="slot-info">
+            <p><strong>Giorno:</strong> <span th:text="${courseSlot.dayOfWeek}"></span></p>
+            <p><strong>Orario:</strong> <span th:text="${#temporals.format(courseSlot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(courseSlot.endTime, 'HH:mm')}"></span></p>
+        </div>
+
+        <div class="search-bar">
+            <form th:action="@{'/staff/viewBookings/' + ${courseSlot.id}}" method="get">
+                <input type="text" name="name" placeholder="Cerca per nome o cognome" th:value="${name}">
+                <button type="submit">Cerca</button>
+            </form>
+        </div>
+
+        <div th:if="${#lists.isEmpty(bookings)}">
+            <p class="text-center" th:if="${isSearchAttempted}">
+                L'utente '<span th:text="${name}"></span>' non ha ancora prenotato questo slot.
+            </p>
+            <p class="text-center" th:unless="${isSearchAttempted}">
+                Nessun utente ha ancora prenotato questo slot.
+            </p>
+        </div>
+        <div th:unless="${#lists.isEmpty(bookings)}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Cognome</th>
+                        <th>Email</th>
+                        <th>Azione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="booking : ${bookings}">
+                        <td th:text="${booking.user.name}"></td>
+                        <td th:text="${booking.user.surname}"></td>
+                        <td th:text="${booking.user.email}"></td>
+                        <td>
+							<a th:href="@{'/staff/deleteBookingFromTrainer/' + ${booking.id}}" 
+							   onclick="return confirm('Sei sicuro di voler eliminare la prenotazione di ' + [[${booking.user.name}]] + '?');" 
+							   class="btn-danger">Elimina</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center" style="margin-top: 2rem;">
+            <a th:href="@{/staff/mySlots}" class="btn btn-secondary">Torna ai Miei Slot</a>
+        </div>
+    </div>
+</body>
+</html>

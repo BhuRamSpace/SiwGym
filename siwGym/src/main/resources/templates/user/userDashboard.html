@@ -199,7 +199,6 @@
                     <a href="/user/profile">Profilo</a>
                     <a href="/user/activeCourse">Corsi Attivi</a>
 					<a href="/user/myBookings">Le mie Prenotazioni</a>
-					<a href="/user/editProfile">Impostazioni</a>
                 </nav>
             </div>
             
@@ -207,17 +206,11 @@
                 <h2>Benvenuto, <span sec:authentication="name">Utente</span>!</h2>
                 <p>Riepilogo delle tue attività e del tuo stato attuale in palestra.</p>
                 
-                <div class="info-cards">
-                    <div class="info-card">
-                        <h3>Ancora da decidere</h3>
-                        <p>Attivo</p>
-                        <a href="/user/subscriptions" class="btn btn-primary">Gestisci</a>
-                    </div>
                     
                     <div class="info-card">
-                        <h3>Prossime Prenotazioni</h3>
-                        <p>Hai <strong>0</strong> lezioni prenotate per questa settimana.</p>
-                        <a href="/user/bookings" class="btn btn-secondary">Visualizza</a>
+                        <h3>Prenotazioni</h3>
+                        <p>Hai <strong th:text="${bookingCount}">0</strong> lezioni prenotate.</p>
+                        <a href="/user/myBookings" class="btn btn-secondary">Visualizza</a>
                     </div>
                 </div>
             </div>

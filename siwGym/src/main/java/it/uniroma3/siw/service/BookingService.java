@@ -67,4 +67,8 @@ public class BookingService {
 	public Optional<Booking> findByUserIdAndCourseSlotId(Long userId, Long courseSlotId) {
         return bookingRepository.findByUserIdAndCourseSlotId(userId, courseSlotId);
     }
+
+	public long count() {
+		return bookingRepository.count();
+	}
 }

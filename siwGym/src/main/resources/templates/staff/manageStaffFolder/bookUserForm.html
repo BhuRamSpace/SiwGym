@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Prenota Utente - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Stili simili a viewCourseSlots.html */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+		.btn-secondary {
+		    background-color: #6c757d;
+		    color: #fff;
+		}
+		
+		.btn-secondary:hover {
+		    background-color: #5a6268;
+		}
+		
+		.text-center {
+		    text-align: center;
+		}
+		
+		.alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+		
+		header {
+		    background-color: #007bff;
+		    color: #fff;
+		    padding: 1rem 40px;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+		
+		header h1 {
+		    margin: 0;
+		    font-size: 1.8rem;
+		}
+		
+		header a {
+		    color: #fff;
+		    text-decoration: none;
+		    font-weight: bold;
+		    padding: 0.5rem 1rem;
+		    border-radius: 5px;
+		    border: 2px solid #fff;
+		    transition: background-color 0.3s ease;
+		}
+		
+		header a:hover {
+		    background-color: rgba(255, 255, 255, 0.2);
+		}
+    </style>
+</head>
+<body>
+	<header>
+	       <h1>SiwGym</h1>
+	       <a href="/logout">Logout</a>
+	   </header>
+    <div class="container">
+        <h2>Prenota Utente a un Corso</h2>
+
+        <div th:if="${param.success}" class="alert-success">
+            Prenotazione inserita con successo!
+        </div>
+        <div th:if="${param.error}" class="alert-danger">
+            Errore nella prenotazione. Controlla che lo slot non sia pieno o che l'utente non sia già prenotato.
+        </div>
+
+        <form action="/staff/bookUser" method="post">
+            <div class="form-group">
+                <label for="slot">Seleziona lo Slot:</label>
+                <select id="slot" name="slotId" class="form-control" required>
+                    <option value="">Seleziona uno slot</option>
+                    <option th:each="slot : ${courseSlots}" th:value="${slot.id}">
+                        <span th:text="${slot.course.name}"></span> -
+                        <span th:text="${slot.dayOfWeek}"></span>
+                        <span th:text="${#temporals.format(slot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(slot.endTime, 'HH:mm')}"></span>
+                    </option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="user">Seleziona l'Utente:</label>
+                <select id="user" name="userId" class="form-control" required>
+                    <option value="">Seleziona un utente</option>
+                    <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name + ' ' + user.surname + ' (' + user.email + ')'}"></option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Conferma Prenotazione</button>
+        </form>
+		
+		<div class="text-center" style="margin-top: 2rem;">
+		    <a href="/staff/trainerDashboard" class="btn btn-secondary">Torna alla Dashboard</a>
+		</div>
+    </div>
+</body>
+</html>

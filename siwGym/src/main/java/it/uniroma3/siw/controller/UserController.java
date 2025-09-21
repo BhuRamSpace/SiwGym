@@ -43,7 +43,11 @@ public class UserController {
     // --- Dashboard Utente ---
     
     @GetMapping({"userDashboard"})
-    public String indexUser() {
+    public String indexUser(Model model) {
+        long bookingCount = bookingService.count();
+        
+
+        model.addAttribute("bookingCount", bookingCount);
         return "user/userDashboard";
     }
 

@@ -55,7 +55,6 @@ public class AdminController {
         
         // Calcola il numero totale di utenti registrati
         long userCount = userService.count();
-        System.out.println("Conteggio utenti dal Service: " + userCount);
         
         // Calcola il numero totale di membri dello staff
         long staffCount = staffService.count();

@@ -1,5 +1,8 @@
 package it.uniroma3.siw.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -25,6 +28,9 @@ public class Staff {
 
     @OneToOne(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
     private Credentials credentials;
+    
+    @OneToMany(mappedBy = "trainer")
+    private List<CourseSlot> courseSlots = new ArrayList<>();
 
     public Staff() {}
 
@@ -47,6 +53,9 @@ public class Staff {
     
     public Credentials getCredentials() { return credentials; }
     public void setCredentials(Credentials credentials) { this.credentials = credentials; }
+    
+    public List<CourseSlot> getCourseSlots() {return courseSlots;}
+    public void setCourseSlots(List<CourseSlot> courseSlots) {this.courseSlots = courseSlots;}
 
     // --- Metodi equals() e hashCode() ---
 

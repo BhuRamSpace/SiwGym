@@ -77,12 +77,42 @@
         .booking-info strong {
             color: #007bff;
         }
+		
+		header {
+		    background-color: #007bff;
+		    color: #fff;
+		    padding: 1rem 40px;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+		
+		header h1 {
+		    margin: 0;
+		    font-size: 1.8rem;
+		}
+		
+		header a {
+		    color: #fff;
+		    text-decoration: none;
+		    font-weight: bold;
+		    padding: 0.5rem 1rem;
+		    border-radius: 5px;
+		    border: 2px solid #fff;
+		    transition: background-color 0.3s ease;
+		}
+		
+		header a:hover {
+		    background-color: rgba(255, 255, 255, 0.2);
+		}
     </style>
 </head>
 <body>
-    <header>
-        <h1>SiwGym</h1>
-    </header>
+	<header>
+	    <h1>SiwGym</h1>
+	    <a href="/logout">Logout</a>
+	</header>
     
     <div class="container">
         <h2>Le Mie Prenotazioni</h2>

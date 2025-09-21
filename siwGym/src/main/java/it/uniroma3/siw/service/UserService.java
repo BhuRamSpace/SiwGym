@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +43,10 @@ public class UserService {
 	}
 	
 	public User findByUsername(String username) {
-        // La chiamata al repository deve usare il nuovo nome del metodo
         return userRepository.findByCredentialsUsername(username).orElse(null);
+    }
+	
+    public List<User> findByNameOrSurname(String query) {
+        return userRepository.findByNameContainingIgnoreCaseOrSurnameContainingIgnoreCase(query, query);
     }
 }

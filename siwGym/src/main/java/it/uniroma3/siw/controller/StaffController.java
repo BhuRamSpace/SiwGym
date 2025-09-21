@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 @RequestMapping("/staff")
@@ -24,7 +26,7 @@ public class StaffController {
     private StaffService staffService;
     
     @Autowired
-    private CourseService courseService;
+    private BookingService bookingService;
 
     @Autowired
     private CourseSlotService courseSlotService;
@@ -34,6 +36,9 @@ public class StaffController {
     
     @Autowired
     private CredentialsService credentialsService;
+    
+    @Autowired 
+    private CourseService courseService;
 
     // --- Dashboard Staff ---
     
@@ -72,9 +77,144 @@ public class StaffController {
         return "staff/trainerDashboard"; // path del template HTML
     }
 
+    
+    @GetMapping("/mySlots")
+    @PreAuthorize("hasAuthority('TRAINER')")
+    public String mySlots(Model model) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Staff trainer = staffService.findByUsername(userDetails.getUsername()).orElse(null);
+        
+        if (trainer != null) {
+            // Aggiungi il trainer e i suoi slot al modello
+            model.addAttribute("trainer", trainer);
+            model.addAttribute("courseSlots", trainer.getCourseSlots());
+            return "staff/manageStaffFolder/mySlots";
+        }
+        
+        // Gestione dell'errore
+        return "redirect:/logout";
+    }
+    
+    
+    @GetMapping("/viewBookings/{slotId}")
+    @PreAuthorize("hasAuthority('TRAINER')")
+    public String viewBookings(@PathVariable("slotId") Long slotId, 
+                               @RequestParam(value = "name", required = false) String name, 
+                               Model model) {
+        Optional<CourseSlot> slotOptional = courseSlotService.findById(slotId);
+        
+        if (slotOptional.isPresent()) {
+            CourseSlot courseSlot = slotOptional.get();
+            List<Booking> bookings = courseSlot.getBookings();
+            
+            boolean isSearchAttempted = (name != null && !name.isBlank());
+            
+            // Se è presente un parametro di ricerca, filtra la lista
+            if (isSearchAttempted) {
+                bookings = bookings.stream()
+                                   .filter(booking -> 
+                                       booking.getUser().getName().toLowerCase().contains(name.toLowerCase()) ||
+                                       booking.getUser().getSurname().toLowerCase().contains(name.toLowerCase())
+                                   )
+                                   .collect(Collectors.toList());
+            }
+            
+            model.addAttribute("courseSlot", courseSlot);
+            model.addAttribute("bookings", bookings);
+            model.addAttribute("name", name); // Aggiungi questo attributo per mantenere il valore nel form
+            model.addAttribute("isSearchAttempted", isSearchAttempted); // Aggiungi questo per la logica di visualizzazione
+            return "staff/manageStaffFolder/viewBookings";
+        }
+        
+        // Se lo slot non viene trovato
+        return "redirect:/staff/mySlots";
+    }
+
+    /**
+     * Gestisce l'eliminazione di una prenotazione da parte del trainer.
+     */
+    @GetMapping("/deleteBookingFromTrainer/{bookingId}")
+    @PreAuthorize("hasAuthority('TRAINER')")
+    public String deleteBookingFromTrainer(@PathVariable("bookingId") Long bookingId) {
+        Optional<Booking> bookingOptional = bookingService.findById(bookingId);
+        
+        if (bookingOptional.isPresent()) {
+            Booking booking = bookingOptional.get();
+            Long courseSlotId = booking.getCourseSlot().getId();
+            
+            // Elimina la prenotazione
+            bookingService.delete(booking);
+            
+            // Reindirizza alla pagina della lista dei prenotati
+            return "redirect:/staff/viewBookings/" + courseSlotId;
+        }
+        
+        return "redirect:/staff/mySlots";
+    }
+    
+    /**
+     * Visualizza il form per il trainer per prenotare un utente.
+     */
+    @GetMapping("/bookUser")
+    @PreAuthorize("hasAuthority('TRAINER')")
+    public String showBookUserForm(Model model) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Staff trainer = staffService.findByUsername(userDetails.getUsername()).orElse(null);
+
+        if (trainer != null) {
+            List<CourseSlot> trainerSlots = courseSlotService.findByTrainer(trainer);
+
+            // Correct the conversion here
+            Iterable<User> usersIterable = userService.findAll();
+            List<User> users = StreamSupport.stream(usersIterable.spliterator(), false)
+                                            .collect(Collectors.toList());
+
+            model.addAttribute("courseSlots", trainerSlots);
+            model.addAttribute("users", users);
+            return "staff/manageStaffFolder/bookUserForm";
+        }
+        
+        return "redirect:/logout";
+    }
+    
+    /**
+     * Gestisce la richiesta di prenotazione.
+     */
+    @PostMapping("/bookUser")
+    @PreAuthorize("hasAuthority('TRAINER')")
+    public String bookUser(@RequestParam("slotId") Long slotId,
+                           @RequestParam("userId") Long userId,
+                           Model model) {
+        
+        CourseSlot courseSlot = courseSlotService.findById(slotId).orElse(null);
+        User user = userService.findById(userId).orElse(null);
+        
+        if (courseSlot != null && user != null) {
+            if (courseSlot.getBookings().size() < courseSlot.getMaxParticipants()) {
+                // Controlla se l'utente è già prenotato
+                boolean alreadyBooked = courseSlot.getBookings().stream()
+                                                .anyMatch(b -> b.getUser().getId().equals(user.getId()));
+                
+                if (alreadyBooked) {
+                    return "redirect:/staff/bookUser?error=alreadyBooked";
+                }
+                
+                Booking booking = new Booking();
+                booking.setCourseSlot(courseSlot);
+                booking.setUser(user);
+                
+                courseSlot.addBooking(booking);
+                courseSlotService.save(courseSlot);
+                
+                return "redirect:/staff/bookUser?success=true";
+            }
+        }
+        
+        return "redirect:/staff/bookUser?error=true";
+    }    
 
     // --- Gestione Lezioni (CourseSlot) ---
-
+/*
     @GetMapping("/courseSlots")
     public String listCourseSlots(Model model) {
         model.addAttribute("courseSlots", courseSlotService.findAll());
@@ -144,4 +284,6 @@ public class StaffController {
         courseSlotService.deleteById(id);
         return "redirect:/staff/courseSlots";
     }
+    
+*/
 }

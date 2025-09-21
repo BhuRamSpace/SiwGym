@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StaffRepository extends CrudRepository<Staff, Long> {
 	
-	Optional<Staff> findByCredentialsUsername(String username);
 	long count();
+	
+	Optional<Staff> findByCredentialsUsername(String username);
 	
 }

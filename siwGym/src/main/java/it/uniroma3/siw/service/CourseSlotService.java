@@ -26,6 +26,10 @@ public class CourseSlotService {
         return courseSlotRepository.findById(id);
     }
 
+    public List<CourseSlot> findByCourseId(Long courseId) {
+        return courseSlotRepository.findByCourseId(courseId);
+    }
+    
     public Iterable<CourseSlot> findAll() {
         return courseSlotRepository.findAll();
     }

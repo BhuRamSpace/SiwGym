@@ -147,7 +147,7 @@
         }
 
         header a:hover {
-            background-color: #f0f8ff; /* Sfondo leggermente azzurro al passaggio del mouse */
+           background-color: #f0f8ff;  /*Sfondo leggermente azzurro al passaggio del mouse*/
         }
     </style>
 </head>
@@ -177,23 +177,18 @@
                 
                 <div class="info-cards">
                     <div class="info-card">
-                        <h3>Utenti Registrati:</h3>
-                        <p><strong th:text="${userCount}">0</strong></p>
+                        <h3>Utenti Registrati: <strong th:text="${userCount}">0</strong></h3>
                     </div>
                     <div class="info-card">
-                        <h3>Membri dello Staff:</h3>
-						<p><strong th:text="${staffCount}">0</strong>
-						   Admin: <strong th:text="${adminCount}">0</strong>
-						   <br>Trainer: <strong th:text="${trainerCount}">0</strong>
-						</p>
+                        <h3>Membri dello Staff: <strong th:text="${staffCount}">0</strong></h3>
+						   Admin: <span><strong th:text="${adminCount}">0</strong></span><br>
+						   Trainer: <span><strong th:text="${trainerCount}">0</strong></span>
                     </div>
                     <div class="info-card">
-                        <h3>Corsi Attivi:</h3>
-                        <p><strong th:text="${courseCount}">0</strong></p>
+                        <h3>Corsi Attivi: <strong th:text="${courseCount}">0</strong></h3>
                     </div>
 					<div class="info-card">
-					    <h3>Slot Attivi:</h3>
-					    <p><strong th:text="${courseSlotCount}">0</strong></p>
+					    <h3>Slot Attivi: <strong th:text="${courseSlotCount}">0</strong></h3>
 					</div>
                 </div>
             </div>

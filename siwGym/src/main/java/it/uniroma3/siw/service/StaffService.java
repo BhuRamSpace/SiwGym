@@ -57,4 +57,9 @@ public class StaffService {
 	public long count() {
 		return staffRepository.count();
 	}
+	
+    public Optional<Staff> findByUsername(String username) {
+        return staffRepository.findByCredentialsUsername(username);
+    }
+
 }

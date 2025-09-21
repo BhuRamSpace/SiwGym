@@ -54,4 +54,17 @@ public class BookingService {
     public void deleteById(Long id) {
         bookingRepository.deleteById(id);
     }
+	
+	public void deleteAllBookingsForUser(User user) {
+	    bookingRepository.deleteAllByUser(user);
+	}
+	
+    @Transactional
+    public void delete(Booking booking) {
+        bookingRepository.delete(booking);
+    }
+
+	public Optional<Booking> findByUserIdAndCourseSlotId(Long userId, Long courseSlotId) {
+        return bookingRepository.findByUserIdAndCourseSlotId(userId, courseSlotId);
+    }
 }

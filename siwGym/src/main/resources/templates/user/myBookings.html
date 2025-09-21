@@ -1,61 +1,113 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Le mie Prenotazioni - SiwGym</title>
+    <title>Le Mie Prenotazioni - SiwGym</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        .bookings-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Stili unificati copiati da viewCourseSlots.html */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .bookings-table th, .bookings-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 600;
         }
-        .bookings-table th {
-            background-color: #f8f9fa;
+        
+        /* Stili per i pulsanti */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
             font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .text-center {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* Stili per le card delle prenotazioni, simili a viewCourseSlots */
+        .booking-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .booking-info p {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
+        .booking-info strong {
+            color: #007bff;
         }
     </style>
 </head>
 <body>
-    <main class="container">
-        <h2>Le mie Prenotazioni</h2>
-        
-        <div th:if="${#lists.isEmpty(bookings)}">
+    <header>
+        <h1>SiwGym</h1>
+    </header>
+    
+    <div class="container">
+        <h2>Le Mie Prenotazioni</h2>
+
+        <div th:if="${#lists.isEmpty(bookings)}" class="text-center">
             <p>Non hai ancora effettuato nessuna prenotazione.</p>
         </div>
         
         <div th:unless="${#lists.isEmpty(bookings)}">
-            <table class="bookings-table">
-                <thead>
-                    <tr>
-                        <th>Corso</th>
-                        <th>Trainer</th>
-                        <th>Data</th>
-                        <th>Orario</th>
-                        <th>Stato</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="booking : ${bookings}">
-                        <td th:text="${booking.courseName}"></td>
-                        <td th:text="${booking.trainerName}"></td>
-                        <td th:text="${#dates.format(booking.date, 'dd-MM-yyyy')}"></td>
-                        <td th:text="${booking.time}"></td>
-                        <td>
-                            <span th:text="${booking.status}" th:class="${booking.status == 'Confermata' ? 'text-success' : 'text-warning'}"></span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div th:each="booking : ${bookings}" class="booking-card">
+                <div class="booking-info">
+                    <p><strong>Corso:</strong> <span th:text="${booking.courseSlot.course.name}"></span></p>
+                    <p><strong>Trainer:</strong> <span th:text="${booking.courseSlot.trainer.name} + ' ' + ${booking.courseSlot.trainer.surname}"></span></p>
+                    <p><strong>Giorno:</strong> <span th:text="${booking.courseSlot.dayOfWeek}"></span></p>
+                    <p><strong>Orario:</strong> <span th:text="${#temporals.format(booking.courseSlot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(booking.courseSlot.endTime, 'HH:mm')}"></span></p>
+                </div>
+                <div>
+				    <a th:href="@{'/user/deleteBooking/' + ${booking.courseSlot.id} + '?source=myBookings'}" class="btn btn-danger" onclick="return confirm('Sei sicuro di voler eliminare la tua prenotazione?');">Elimina Prenotazione</a>
+                </div>
+            </div>
         </div>
-        
-        <a href="/user/dashboard" class="btn btn-primary" style="margin-top: 1.5rem;">Torna alla Dashboard</a>
-    </main>
+
+        <div class="text-center" style="margin-top: 2rem;">
+            <a href="/user/userDashboard" class="btn btn-secondary">Torna alla Dashboard</a>
+        </div>
+    </div>
 </body>
 </html>

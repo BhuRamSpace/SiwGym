@@ -31,8 +31,18 @@ public class UserService {
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
+    
+    @Transactional
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
 
 	public long count() {
 		 return userRepository.count();
 	}
+	
+	public User findByUsername(String username) {
+        // La chiamata al repository deve usare il nuovo nome del metodo
+        return userRepository.findByCredentialsUsername(username).orElse(null);
+    }
 }

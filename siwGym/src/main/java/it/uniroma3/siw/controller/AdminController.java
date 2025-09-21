@@ -49,11 +49,6 @@ public class AdminController {
     
     // --- Pagine Dashboard Amministratore ---
 
-/*    @GetMapping({"/adminDashboard"})
-    public String indexAdmin() {
-        return "staff/adminDashboard";
-    }*/
-
     
     @GetMapping({"/adminDashboard"})
     public String indexAdmin(Model model) {
@@ -63,27 +58,27 @@ public class AdminController {
         System.out.println("Conteggio utenti dal Service: " + userCount);
         
         // Calcola il numero totale di membri dello staff
- //       long staffCount = staffService.count();
+        long staffCount = staffService.count();
         
-       /* // Calcola il numero di admin (assumendo che il ruolo sia 'ADMIN')
+        // Calcola il numero di admin (assumendo che il ruolo sia 'ADMIN')
         long adminCount = credentialsService.countByRole("ADMIN"); 
         
         // Calcola il numero di trainer (assumendo che il ruolo sia 'TRAINER' o simile)
-        long trainerCount = credentialsService.countByRole("TRAINER");*/
+        long trainerCount = credentialsService.countByRole("TRAINER");
         
         // Calcola il numero totale di corsi (assumendo che tutti i corsi esistenti siano "attivi")
-//        long courseCount = courseService.count();
+        long courseCount = courseService.count();
         
         // Calcola il numero totale di slot attivi di tutti i corsi
-//        long courseSlotCount = courseSlotService.count();
+        long courseSlotCount = courseSlotService.count();
 
         // Aggiungi gli attributi al modello
         model.addAttribute("userCount", userCount);
-     //   model.addAttribute("staffCount", staffCount);
-     //   model.addAttribute("adminCount", adminCount);
-     //   model.addAttribute("trainerCount", trainerCount);
-     //   model.addAttribute("courseCount", courseCount);
-     //   model.addAttribute("courseSlotCount", courseSlotCount);
+        model.addAttribute("staffCount", staffCount);
+        model.addAttribute("adminCount", adminCount);
+        model.addAttribute("trainerCount", trainerCount);
+        model.addAttribute("courseCount", courseCount);
+        model.addAttribute("courseSlotCount", courseSlotCount);
 
         return "staff/adminDashboard";
     }

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Modifica Profilo - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+		
+        .edit-profile-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .edit-profile-container h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+			
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit-reduced {
+            flex-grow: 1; /* Permette al pulsante di occupare lo spazio disponibile */
+            margin-right: 10px; /* Spazio tra i due pulsanti */
+        }
+        
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .error-message {
+            color: #dc3545;
+            text-align: left;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-profile-container">
+        <h1>Modifica Profilo</h1>
+		<form th:action="@{/user/profile/editProfile}" method="post" th:object="${user}">
+		    <input type="hidden" th:field="*{id}">
+		
+		    <!-- Dati utente -->
+		    <div class="form-group">
+		        <label for="name">Nome:</label>
+		        <input type="text" id="name" th:field="*{name}" required>
+		        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></p>
+		    </div>
+		
+		    <div class="form-group">
+		        <label for="surname">Cognome:</label>
+		        <input type="text" id="surname" th:field="*{surname}" required>
+		        <p th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}" class="error-message"></p>
+		    </div>
+		
+		    <div class="form-group">
+		        <label for="email">Email:</label>
+		        <input type="email" id="email" th:field="*{email}" required>
+		        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></p>
+		    </div>
+		
+		    <hr style="margin: 30px 0;">
+		    <p>Dati di accesso</p>
+		
+		    <!-- Dati credenziali -->
+		    <input type="hidden" th:field="${credentials.id}">
+		
+		    <div class="form-group">
+		        <label for="username">Username:</label>
+		        <input type="text" id="username" th:field="${credentials.username}" required>
+		        <p th:if="${#fields.hasErrors('credentials.username')}" th:errors="*{credentials.username}" class="error-message"></p>
+		        <p th:if="${usernameDuplicate != null}" th:text="${usernameDuplicate}" class="error-message"></p>
+		    </div>
+		
+		    <div class="form-group">
+		        <label for="password">Password:</label>
+		        <input type="password" id="password" th:field="${credentials.password}">
+		        <p th:if="${#fields.hasErrors('credentials.password')}" th:errors="*{credentials.password}" class="error-message"></p>
+		    </div>
+		
+		    <div class="form-actions">
+		        <button type="submit" class="btn-submit">Salva Modifiche</button>
+		        <a th:href="@{/user/profile}" class="btn btn-secondary">Annulla</a>
+		    </div>
+		</form>
+    </div>
+</body>
+</html>

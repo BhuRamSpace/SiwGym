@@ -3,6 +3,8 @@ package it.uniroma3.siw.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -38,6 +40,9 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Credentials credentials;
+    
+    @OneToMany(mappedBy = "user")
+    private List<Booking> bookings = new ArrayList<>();
 
     public User() {}
 
@@ -67,10 +72,22 @@ public class User {
     
     public Credentials getCredentials() { return credentials; }
     public void setCredentials(Credentials credentials) { this.credentials = credentials; }
+    
+
+    public List<Booking> getBookings() {
+		return bookings;
+	}
+
+	public void setBookings(List<Booking> bookings) {
+		this.bookings = bookings;
+	}
+
+    
 
     // --- Metodi equals() e hashCode() ---
     
-    @Override
+	
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

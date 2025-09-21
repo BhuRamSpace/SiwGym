@@ -37,10 +37,41 @@ public class StaffController {
 
     // --- Dashboard Staff ---
     
-    @GetMapping({"", "/index"})
+   /* @GetMapping({"", "/index"})
     public String indexStaff() {
         return "staff/indexStaff";
+    }*/
+    
+    
+ // --- Dashboard Trainer ---
+    @GetMapping("/trainerDashboard")
+    @PreAuthorize("hasAuthority('TRAINER')")
+    public String trainerDashboard(Model model) {
+
+        // Recupera il trainer loggato
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        }
+
+        // Trova lo Staff corrispondente allo username
+        Staff trainer = staffService.findByUsername(username).orElse(null);
+        if (trainer == null) {
+            // se non trovato, reindirizza al logout o pagina di errore
+            return "redirect:/logout";
+        }
+
+        // Recupera gli slot corsi assegnati a questo trainer
+        List<CourseSlot> courseSlots = courseSlotService.findByTrainer(trainer);
+
+        // Passa i dati alla view
+        model.addAttribute("trainer", trainer);
+        model.addAttribute("courseSlots", courseSlots);
+
+        return "staff/trainerDashboard"; // path del template HTML
     }
+
 
     // --- Gestione Lezioni (CourseSlot) ---
 

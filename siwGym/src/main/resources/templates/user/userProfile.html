@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Dashboard Utente - SiwGym</title>
+    <title>Profilo Utente - SiwGym</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
         /* Stili unificati per tutto il sito */
@@ -30,7 +30,7 @@
             font-weight: 600;
             margin-top: 0;
         }
-        
+
         /* Stili per i pulsanti */
         .btn {
             display: inline-block;
@@ -52,16 +52,16 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
-        
+
         .btn-secondary {
             background-color: #6c757d;
             color: #fff;
         }
-        
+
         .btn-secondary:hover {
             background-color: #5a6268;
         }
-        
+
         .btn-danger {
             background-color: #dc3545;
             color: white;
@@ -70,7 +70,7 @@
         .btn-danger:hover {
             background-color: #c82333;
         }
-        
+
         /* Layout della dashboard */
         .dashboard-container {
             display: flex;
@@ -110,39 +110,36 @@
         .main-content {
             flex-grow: 1;
         }
-		
-		.main-content h2 {
-		    margin-top: 0;
-		    margin-bottom: 1rem;
-		    text-align: left;
-		    font-size: 2rem;
-		    color: #333;
-		}
-        
-        .info-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
 
-        .info-card {
-            background-color: #f8f9fa;
-            border-left: 5px solid #007bff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        .main-content h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
             text-align: left;
+            font-size: 2rem;
+            color: #333;
         }
 
-        .info-card h3 {
+        .profile-info {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-info h3 {
             margin-top: 0;
             color: #007bff;
-        }
-        
-        .info-card p {
-            font-size: 1.1rem;
             margin-bottom: 1rem;
+        }
+
+        .profile-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info .actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
         }
 
         header {
@@ -184,48 +181,48 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>SiwGym</h1>
-        <a href="/logout">Logout</a>
-    </header>
+<header>
+    <h1>SiwGym</h1>
+    <a href="/logout">Logout</a>
+</header>
 
-    <main class="container">
-        <h2>Pannello di controllo</h2>
-        <div class="dashboard-container">
-            <div class="sidebar">
-                <h3>Navigazione</h3>
-                <nav class="sidebar-menu">
-                    <a href="/">Home Page</a>
-                    <a href="/user/profile">Profilo</a>
-                    <a href="/user/activeCourse">Corsi Attivi</a>
-					<a href="/user/myBookings">Le mie Prenotazioni</a>
-					<a href="/user/editProfile">Impostazioni</a>
-                </nav>
-            </div>
-            
-            <div class="main-content">
-                <h2>Benvenuto, <span sec:authentication="name">Utente</span>!</h2>
-                <p>Riepilogo delle tue attività e del tuo stato attuale in palestra.</p>
-                
-                <div class="info-cards">
-                    <div class="info-card">
-                        <h3>Ancora da decidere</h3>
-                        <p>Attivo</p>
-                        <a href="/user/subscriptions" class="btn btn-primary">Gestisci</a>
-                    </div>
-                    
-                    <div class="info-card">
-                        <h3>Prossime Prenotazioni</h3>
-                        <p>Hai <strong>0</strong> lezioni prenotate per questa settimana.</p>
-                        <a href="/user/bookings" class="btn btn-secondary">Visualizza</a>
-                    </div>
-                </div>
-            </div>
+<main class="container">
+    <h2>Il mio profilo</h2>
+
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <h3>Navigazione</h3>
+            <nav class="sidebar-menu">
+                <a href="/">Home Page</a>
+                <a href="/user/profile">Profilo</a>
+                <a href="/user/subscriptions">Corsi Attivi</a>
+                <a href="/user/bookings">Le mie prenotazioni</a>
+            </nav>
         </div>
-    </main>
 
-    <footer>
-        <p>&copy; 2025 SiwGym. Tutti i diritti riservati.</p>
-    </footer>
+        <div class="main-content">
+            <h2>Bentornato, <span th:text="${user.name}"></span>!</h2>
+            <p>Visualizza e gestisci le informazioni del tuo profilo.</p>
+
+			<div class="profile-info">
+			    <h3>Dettagli del profilo</h3>
+			    <p><strong>Nome:</strong> <span th:text="${user.name}">[Nome Utente]</span></p>
+			    <p><strong>Cognome:</strong> <span th:text="${user.surname}">[Cognome Utente]</span></p>
+			    <p><strong>Email:</strong> <span th:text="${user.email}">[Email Utente]</span></p>
+			    <p>
+			        <strong>Username:</strong> <span th:text="${credentials.username}">[Username]</span>
+			    </p>
+				<div class="actions">
+					<a href="/user/userDashboard" class="btn btn-secondary">Dashboard</a> 
+					<a th:href="@{/user/profile/editProfile}" class="btn btn-primary">Modifica Profilo</a> 
+				</div>
+			</div>
+			
+        </div>
+    </div>
+</main>
+<footer>
+    <p>&copy; 2025 SiwGym. Tutti i diritti riservati.</p>
+</footer>
 </body>
 </html>

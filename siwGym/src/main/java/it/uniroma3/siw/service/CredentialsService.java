@@ -46,9 +46,9 @@ public class CredentialsService {
     public void delete(Credentials credentials) {
         credentialsRepository.delete(credentials);
     }
-	
-/*    public long countByRole(String role) {
+
+    public long countByRole(String role) {
         return credentialsRepository.countByRole(role);
-    }*/
+    }
 
 }

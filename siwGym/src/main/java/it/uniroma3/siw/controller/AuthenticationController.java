@@ -48,6 +48,7 @@ public class AuthenticationController {
      * Gestisce il reindirizzamento dopo un login riuscito.
      * Reindirizza l'utente alla dashboard appropriata in base al suo ruolo.
      */
+    
     @GetMapping(value = "/success")
     public String defaultAfterLogin(Model model) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -55,14 +56,13 @@ public class AuthenticationController {
         
         if (credentials != null) {
             if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
-                return "staff/adminDashboard";
+                return "redirect:/admin/adminDashboard";
             }
             if (credentials.getRole().equals(Credentials.TRAINER_ROLE)) {
-                return "staff/trainerDashboard";
+                return "redirect:/staff/trainerDashboard"; 
             }
         }
-        return "user/userDashboard";
-
+        return "redirect:/user/userDashboard";
     }
 
     /**
@@ -115,6 +115,5 @@ public class AuthenticationController {
 
         return "user/formRegisterUser";
     }
-
-
+    
 }

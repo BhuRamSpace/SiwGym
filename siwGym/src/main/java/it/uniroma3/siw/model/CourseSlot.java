@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import it.uniroma3.siw.controller.validator.TimeOrderConstraint;
 import it.uniroma3.siw.controller.validator.MaxParticipantsConstraint;
@@ -42,7 +43,7 @@ public class CourseSlot {
 
     // Relazione uno-a-molti con la classe Booking
     @OneToMany(mappedBy = "courseSlot", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Booking> bookings;
+    private List<Booking> bookings = new ArrayList<>();
 
     public CourseSlot() {}
 
@@ -86,4 +87,11 @@ public class CourseSlot {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+    
+    public void addBooking(Booking booking) {
+        this.bookings.add(booking);
+        booking.setCourseSlot(this);
+    }
+
+
 }

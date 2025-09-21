@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Conferma Prenotazione - SiwGym</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #28a745; /* Verde per il successo */
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+        
+        .confirmation-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .details-section {
+            text-align: left;
+            border-top: 2px solid #007bff;
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+        
+        .details-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .details-item strong {
+            width: 150px;
+            flex-shrink: 0;
+            color: #555;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+            margin-top: 30px;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Prenotazione Confermato! 🎉</h2>
+        <p class="confirmation-message">La tua prenotazione è stata completata con successo. Di seguito trovi i dettagli:</p>
+
+        <div class="details-section">
+            
+            <h3>Dettagli Utente</h3>
+            <div class="details-item">
+                <strong>Nome Utente:</strong>
+                <span th:text="${user.name} + ' ' + ${user.surname}"></span>
+            </div>
+            <div class="details-item">
+                <strong>Email:</strong>
+                <span th:text="${user.email}"></span>
+            </div>
+            
+            <h3>Dettagli Corso</h3>
+            <div class="details-item">
+                <strong>Corso:</strong>
+                <span th:text="${course.name}"></span>
+            </div>
+            <div class="details-item">
+                <strong>Descrizione:</strong>
+                <span th:text="${course.description}"></span>
+            </div>
+            <div class="details-item">
+                <strong>Trainer:</strong>
+                <span th:text="${trainer.name} + ' ' + ${trainer.surname}"></span>
+            </div>
+            <div class="details-item">
+                <strong>Giorno:</strong>
+                <span th:text="${slot.dayOfWeek}"></span>
+            </div>
+            <div class="details-item">
+                <strong>Orario:</strong>
+                <span th:text="${#temporals.format(slot.startTime, 'HH:mm')} + ' - ' + ${#temporals.format(slot.endTime, 'HH:mm')}"></span>
+            </div>
+        </div>
+
+        <a href="/user/activeCourse" class="btn btn-primary">Torna ai Corsi</a>
+		<a th:href="@{'/user/viewCourseSlots/' + ${course.id}}" class="btn btn-primary">Torna ai Solt dei Corsi</a>
+    </div>
+</body>
+</html>

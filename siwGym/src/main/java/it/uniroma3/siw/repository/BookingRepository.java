@@ -16,4 +16,7 @@ public interface BookingRepository extends CrudRepository<Booking, Long> {
 	public List<Booking> findByUser(User user);
 	public Long countByCourseSlot(CourseSlot courseSlot);
 	public Optional<Booking> findByCourseSlotAndUser(CourseSlot courseSlot, User user);
+	public boolean existsByCourseSlotAndUser(CourseSlot courseSlot, User user);
+	public void deleteAllByUser(User user);
+	public Optional<Booking> findByUserIdAndCourseSlotId(Long userId, Long courseSlotId);
 }

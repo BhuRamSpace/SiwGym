@@ -1,0 +1,358 @@
+/* Stili globali per tutto il sito */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Stili per i contenitori principali */
+.container {
+    max-width: 1200px;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.register-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Stili per le intestazioni */
+h1, h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+/* Stili per i pulsanti */
+.btn {
+    display: inline-block;
+    padding: 12px 20px; /* Padding unificato */
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-container {
+    text-align: right;
+    margin-top: 30px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #218838;
+}
+
+.btn-submit-reduced {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+/* Stili per i form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+    width: 100%; /* Larghezza unificata */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus, 
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.form-group .error {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* Stili per la tabella */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table thead {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.table th {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.table th:last-child {
+    border-right: none;
+}
+
+.table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Stili per i dettagli */
+.user-details p, .course-details p, .staff-details p {
+    font-size: 1.1rem;
+    margin: 15px 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.user-details strong, .course-details strong, .staff-details strong {
+    display: inline-block;
+    width: 150px; /* Larghezza unificata per le etichette */
+    color: #555;
+}
+
+/* Stili per i layout e le sezioni */
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.back-button-container {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Stili dell'header del sito */
+header {
+    background-color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #007bff;
+}
+
+header a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 2px solid #007bff;
+    transition: background-color 0.3s ease;
+}
+
+header a:hover {
+    background-color: #f0f8ff;
+}
+
+/* Stili per le sezioni specifiche */
+.slots-section {
+    margin-top: 40px;
+    border-top: 2px solid #007bff;
+    padding-top: 20px;
+}
+
+.slots-section h3 {
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.slot-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.slot-info p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.slot-info strong {
+    color: #007bff;
+}
+
+.slot-actions a {
+    margin-left: 10px;
+}
+
+.search-bar {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.search-bar input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 70%;
+}
+
+.search-bar button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Stili per messaggi di alert */
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* Stili per pop-up */
+.popup-card {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 40px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.popup-card h2 {
+    color: #28a745;
+    margin-bottom: 20px;
+}
+
+.popup-card p {
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.ok-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.ok-button:hover {
+    background-color: #0056b3;
+}

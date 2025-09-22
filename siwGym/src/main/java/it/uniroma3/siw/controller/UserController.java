@@ -42,14 +42,44 @@ public class UserController {
 
     // --- Dashboard Utente ---
     
-    @GetMapping({"userDashboard"})
+   /* @GetMapping({"/userDashboard"})
     public String indexUser(Model model) {
         long bookingCount = bookingService.count();
         
-
         model.addAttribute("bookingCount", bookingCount);
         return "user/userDashboard";
+    }*/
+
+    @GetMapping({"/userDashboard"})
+    public String indexUser(Model model) {
+        //Recupera il nome utente dell'utente loggato
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+
+        //Trova l'utente (User) corrispondente allo username
+        //Assumi che il metodo findByUsername ritorni un Optional<User>
+        
+        User currentUser = userService.findByUsername(username);
+
+        if (currentUser != null) {
+            //Conta le prenotazioni dell'utente
+            //Utilizza il metodo getBookings() dell'oggetto User
+        	
+            long bookingCount = 0;
+            if (currentUser.getBookings() != null) {
+                bookingCount = currentUser.getBookings().size();
+            }
+            
+            // Aggiungi il conteggio al modello
+            model.addAttribute("bookingCount", bookingCount);
+            
+            return "user/userDashboard";
+        }
+
+        // Gestione dell'errore se l'utente non viene trovato
+        return "redirect:/login";
     }
+    
 
     // --- Gestione Profilo Utente ---
     @GetMapping("/profile")

@@ -52,7 +52,7 @@ public class StaffController {
     @GetMapping("/trainerDashboard")
     @PreAuthorize("hasAuthority('TRAINER')")
     public String trainerDashboard(Model model) {
-
+    	
         // Recupera il trainer loggato
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = null;
@@ -70,9 +70,12 @@ public class StaffController {
         // Recupera gli slot corsi assegnati a questo trainer
         List<CourseSlot> courseSlots = courseSlotService.findByTrainer(trainer);
 
+        model.addAttribute("courseSlotCount", courseSlots.size());
+        
         // Passa i dati alla view
         model.addAttribute("trainer", trainer);
         model.addAttribute("courseSlots", courseSlots);
+        
 
         return "staff/trainerDashboard"; // path del template HTML
     }
